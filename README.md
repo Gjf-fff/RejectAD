@@ -1,0 +1,2 @@
+# RejectAD
+remove some ads
