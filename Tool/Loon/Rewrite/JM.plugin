@@ -1,0 +1,25 @@
+#!name = JM 网页广告补丁
+#!desc = 移除 18comic.vip 列表广告、底部悬浮广告及同源广告回退加载器，并拦截抓包确认的第三方广告链路。HTML 清理需要启用并信任 MitM 证书。
+#!author = Gjf-fff
+#!homepage = https://github.com/Gjf-fff/RejectAD/blob/main/Tool/Loon/README_JM.md
+#!tag = 去广告,网页
+
+[Rule]
+# 仅列出本次抓包确认的广告加载主机。
+DOMAIN,a.chnsrv.com,REJECT
+DOMAIN,s.chnsrv.com,REJECT
+DOMAIN,campfirecroutondecorator.com,REJECT
+DOMAIN,t.snaptrckr.fun,REJECT
+DOMAIN,cdn.storagexhd.com,REJECT
+DOMAIN,static.javhdhello.com,REJECT
+DOMAIN,cdn.bncloudfl.com,REJECT
+DOMAIN,cdn.pncloudfl.com,REJECT
+DOMAIN,z6v2p9a8.bkcdn.net,REJECT
+DOMAIN,sc.ec424.com,REJECT
+DOMAIN,ads.exoclick.com,REJECT
+
+[Script]
+http-response ^https?:\/\/(?:www\.)?18comic\.vip\/ script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/jm_web_ad_patch.js,requires-body=true,timeout=10,tag=JM网页广告补丁,enable=true
+
+[Mitm]
+hostname = 18comic.vip,www.18comic.vip

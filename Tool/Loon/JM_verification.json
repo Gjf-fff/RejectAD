@@ -1,0 +1,42 @@
+{
+  "capture_entries": 295,
+  "domain_blocked_requests": 49,
+  "html_changes": [
+    {
+      "entry": 100,
+      "path": "/albums/hanman",
+      "logs": [
+        "[JM广告补丁] 删除 9 个广告容器及 2 个广告加载脚本"
+      ]
+    },
+    {
+      "entry": 259,
+      "path": "/albums/hanman",
+      "logs": [
+        "[JM广告补丁] 删除 9 个广告容器及 2 个广告加载脚本"
+      ]
+    }
+  ],
+  "untouched_responses": 67,
+  "dom_checks": [
+    {
+      "entry": 100,
+      "grid_ads_removed": 8,
+      "floating_container_removed": 1,
+      "normal_album_links_preserved": 82,
+      "normal_images_preserved": 109,
+      "pagination_forms_navigation_preserved": true,
+      "ad_loaders_remaining": 0
+    },
+    {
+      "entry": 259,
+      "grid_ads_removed": 8,
+      "floating_container_removed": 1,
+      "normal_album_links_preserved": 82,
+      "normal_images_preserved": 109,
+      "pagination_forms_navigation_preserved": true,
+      "ad_loaders_remaining": 0
+    }
+  ],
+  "checks": "passed"
+}
