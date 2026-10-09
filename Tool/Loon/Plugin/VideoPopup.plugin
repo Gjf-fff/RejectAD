@@ -1,0 +1,11 @@
+#!name = 视频播放广告弹窗补丁
+#!desc = 针对抓包确认的 missav.ai，在网页加载时禁用独立 pop() 事件并阻止已识别的广告开窗。需要脚本和 MitM；刷新原网页后生效，正常视频流不拦截。尚需手机验证。
+#!author = Gjf-fff
+#!homepage = https://github.com/Gjf-fff/RejectAD/blob/main/Tool/Loon/README_VideoPopup.md
+#!tag = 去广告,视频,弹窗
+
+[Script]
+http-response ^https?:\/\/(?:www\.)?missav\.ai\/ script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/video_popup_patch.js,requires-body=true,timeout=10,tag=视频播放广告弹窗补丁,enable=true
+
+[Mitm]
+hostname = missav.ai,www.missav.ai

@@ -8,7 +8,12 @@ remove some ads
 - [JM 网页广告补丁：安装与说明](Tool/Loon/README_JM.md)
 - [JM 插件订阅地址](https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/Plugin/JM.plugin)
 
-### 视频点击广告分流规则
+### 视频点击广告弹窗
+
+- [VideoPopup.plugin 订阅地址](https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/Plugin/VideoPopup.plugin)：在原网页内阻止已识别的广告开窗，需要脚本和 MitM。
+- [视频弹窗插件安装与说明](Tool/Loon/README_VideoPopup.md)
+
+#### 后备分流规则
 
 - [VideoPopup.list 订阅地址](https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/Ruler/VideoPopup.list)
 - 在 Loon 中添加为远程规则（订阅规则），策略选择 `REJECT`，启用后使用分流模式重新加载网页。此文件不是插件。
