@@ -1,4 +1,4 @@
-#!name = JM 网页广告补丁
+#!name = 我不是涩神
 #!desc = 清理 18comic.vip 网页广告，并合并 missav.ai 视频播放防弹窗功能，阻止已识别的广告开窗。需要脚本和 MitM，重新打开原网页后生效；视频防弹窗尚需手机验证。
 #!author = Gjf-fff
 #!icon = https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/Icon/JM-avatar.png
