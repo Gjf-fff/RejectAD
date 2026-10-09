@@ -10,7 +10,7 @@ remove some ads
 
 ### 视频点击广告弹窗
 
-- [VideoPopup.plugin 订阅地址](https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/Plugin/VideoPopup.plugin)：在原网页内阻止已识别的广告开窗，需要脚本和 MitM。
+- 视频防弹窗已合并到上方的 [JM 插件](https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/Plugin/JM.plugin)，更新 JM 即可；需要脚本和 MitM。已安装独立 VideoPopup 插件的用户请停用独立插件，避免重复。
 - [视频弹窗插件安装与说明](Tool/Loon/README_VideoPopup.md)
 
 #### 后备分流规则

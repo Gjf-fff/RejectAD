@@ -1,5 +1,5 @@
 #!name = JM 网页广告补丁
-#!desc = 移除 18comic.vip 列表广告、底部悬浮广告及同源广告回退加载器，并拦截抓包确认的第三方广告链路。HTML 清理需要启用并信任 MitM 证书。
+#!desc = 清理 18comic.vip 网页广告，并合并 missav.ai 视频播放防弹窗功能，阻止已识别的广告开窗。需要脚本和 MitM，重新打开原网页后生效；视频防弹窗尚需手机验证。
 #!author = Gjf-fff
 #!icon = https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/Icon/JM-avatar.png
 #!homepage = https://github.com/Gjf-fff/RejectAD/blob/main/Tool/Loon/README_JM.md
@@ -22,5 +22,7 @@ DOMAIN,ads.exoclick.com,REJECT
 [Script]
 http-response ^https?:\/\/(?:www\.)?18comic\.vip\/ script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/jm_web_ad_patch.js,requires-body=true,timeout=10,tag=JM网页广告补丁,enable=true
 
+http-response ^https?:\/\/(?:www\.)?missav\.ai\/ script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/video_popup_patch.js,requires-body=true,timeout=10,tag=视频播放广告弹窗补丁,enable=true
+
 [Mitm]
-hostname = 18comic.vip,www.18comic.vip
+hostname = 18comic.vip,www.18comic.vip,missav.ai,www.missav.ai

@@ -4,7 +4,9 @@
 
 ## 安装
 
-在 Loon 添加并启用 [VideoPopup.plugin](https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/Plugin/VideoPopup.plugin)。它会自动下载脚本。确认脚本、MitM 开关开启，MitM 证书已安装并信任。
+防弹窗功能已合并到 [JM.plugin](https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/Plugin/JM.plugin)，在 Loon 更新并启用现有 JM 插件即可，无需再添加独立插件。确认脚本、MitM 开关开启，MitM 证书已安装并信任。
+
+如果已经安装独立 `VideoPopup.plugin`，更新 JM 后停用独立插件，避免重复响应脚本。独立订阅文件保留供旧订阅兼容，两者选一个启用。
 
 关闭原视频网页，重新打开，或重新加载整个网页后再点播放。仅在已经加载的播放器上再次点击，不会触发 HTML 修改。已打开的广告标签页也不会自动关闭。
 
