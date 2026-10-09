@@ -1,13 +1,24 @@
-#!name = 知乎回答间广告补丁
-#!desc = 移除 next-render 返回的 type=ad 独立广告卡片，包含回答间的饿了么广告。脚本自动从本仓库下载；与可莉同接口的响应体重写可能冲突，请参阅说明。
+#!name = 知乎回答页广告补丁
+#!desc = 合并回答间独立广告卡片过滤、回答底部商业广告入口拦截及抓包确认的广告素材/曝光请求拦截。需要脚本、复写和 MitM；已缓存广告可能保留占位，详见说明。
 #!author = Gjf-fff
 #!icon = https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/zhihu.png
 #!homepage = https://github.com/Gjf-fff/RejectAD/blob/main/Tool/Loon/README.md
 #!tag = 去广告,知乎
 
+[Rewrite]
+# 已知的回答底部商业广告接口；来源见 README，本次 HAR 未捕获此接口。
+^https?:\/\/api\.zhihu\.com\/commercial_api\/answer\/\d+\/bottom-v2\/?(?:\?|$) reject-dict
+# 本次 HAR 确认的知乎品牌广告资源及广告图片；不拦截正常 zhimg 图片。
+^https?:\/\/zhstatic\.zhihu\.com\/brand-ad\/image\/ reject
+^https?:\/\/qh-material\.taobao\.com\/auto\/aigc\/pic\/AI_FLOW_PIC_[^/?]+\.(?:jpg|jpeg|png|webp)(?:\?|$) reject-img
+# 本次 HAR 确认的曝光/竞价通知。拦截通知本身不等于移除广告卡片。
+^https?:\/\/adx-track\.domob\.cn\/imp\/?(?:\?|$) reject-200
+^https?:\/\/wcp\.taobao\.com\/adstrack\/track\.json(?:\?|$) reject-200
+^https?:\/\/lftxali\.fancyapi\.com\/win\/?(?:\?|$) reject-200
+^https?:\/\/rtb\.julang\.taobao\.com\/dsp\/surge\/winNotice\/ADX_YIZHUN\/?(?:\?|$) reject-200
+
 [Script]
 http-response ^https?:\/\/api\.zhihu\.com\/next-render\/?(?:\?|$) script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/zhihu_ad_patch.js,requires-body=true,timeout=10,tag=知乎回答间广告补丁,enable=true
 
 [Mitm]
-hostname = api.zhihu.com
-
+hostname = api.zhihu.com,zhstatic.zhihu.com,qh-material.taobao.com,adx-track.domob.cn,wcp.taobao.com,lftxali.fancyapi.com,rtb.julang.taobao.com
