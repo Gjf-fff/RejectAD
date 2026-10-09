@@ -1,7 +1,7 @@
 #!name = JM 网页广告补丁
 #!desc = 移除 18comic.vip 列表广告、底部悬浮广告及同源广告回退加载器，并拦截抓包确认的第三方广告链路。HTML 清理需要启用并信任 MitM 证书。
 #!author = Gjf-fff
-#!icon = https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/Icon/JM-HD.png
+#!icon = https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/Icon/JM-avatar.png
 #!homepage = https://github.com/Gjf-fff/RejectAD/blob/main/Tool/Loon/README_JM.md
 #!tag = 去广告,网页
 
