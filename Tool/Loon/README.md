@@ -4,10 +4,10 @@
 
 ## 目录
 
-与本仓库 QuanX 的目录对应：
+脚本与插件目录：
 
 - `Tool/Loon/JS/zhihu_ad_patch.js`：广告响应脚本。
-- `Tool/Loon/Rewrite/Zhihu.plugin`：可直接订阅的 Loon 插件。
+- `Tool/Loon/Plugin/Zhihu.plugin`：可直接订阅的 Loon 插件。
 
 插件使用知乎图标，图标地址来自 [fmz200/wool_scripts](https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/zhihu.png)。
 
@@ -16,7 +16,7 @@
 在 Loon 的插件页面添加下面的 URL，保存并启用：
 
 ```text
-https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/Rewrite/Zhihu.plugin
+https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/Plugin/Zhihu.plugin
 ```
 
 插件会自动从本仓库下载脚本，不需要把 JS 保存到本地。确认 Loon 的脚本、MitM 总开关启用，并已安装和信任 MitM 证书。插件会添加 `api.zhihu.com` 到 MitM 域名。

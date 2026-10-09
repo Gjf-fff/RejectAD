@@ -7,7 +7,7 @@
 在 Loon 的插件页面添加、启用下面的订阅地址：
 
 ```text
-https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/Rewrite/JM.plugin
+https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/Plugin/JM.plugin
 ```
 
 开启脚本及 MitM，安装并信任 Loon 的 MitM 证书。插件会加入 `18comic.vip` 与 `www.18comic.vip`；JS 自动从本仓库下载。添加后重载配置，关闭原网页标签并重新打开，使新 HTML 经过补丁。

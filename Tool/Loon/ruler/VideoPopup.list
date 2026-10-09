@@ -1,0 +1,10 @@
+# 视频点击广告拦截（Loon 分流规则）
+# 添加为远程规则，策略选择 REJECT；无需 MitM。
+# 仅阻断已识别的广告请求，仍可能出现空白或错误标签页。
+# 不拦截 surrit.com 的正常视频流和 .jpeg 视频分片。
+
+DOMAIN-SUFFIX,diffusedpassionquaking.com
+DOMAIN-SUFFIX,ladyoffices.com
+DOMAIN,phoddto36box.tc87.top
+DOMAIN,appdw.tjucp.top
+DOMAIN,httpserver.ssg01.com
