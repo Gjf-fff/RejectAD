@@ -10,13 +10,13 @@ remove some ads
 
 ### 视频点击广告分流规则
 
-- [VideoPopup.list 订阅地址](https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/ruler/VideoPopup.list)
+- [VideoPopup.list 订阅地址](https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/Ruler/VideoPopup.list)
 - 在 Loon 中添加为远程规则（订阅规则），策略选择 `REJECT`，启用后使用分流模式重新加载网页。此文件不是插件。
 - 无需 MitM；阻断已识别的广告跳转及落地页，仍可能出现空白或错误标签页。
 
 ### Loon 目录
 
-- `Tool/Loon/ruler/`：分流规则列表。
+- `Tool/Loon/Ruler/`：分流规则列表。
 - `Tool/Loon/Plugin/`：Loon 插件。
 - `Tool/Loon/JS/`：插件使用的脚本。
 
