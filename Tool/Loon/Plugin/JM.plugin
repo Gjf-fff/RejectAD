@@ -1,5 +1,5 @@
 #!name = 我不是涩神
-#!desc = 清理 18comic.vip 网页广告，并合并 missav.ai 视频播放防弹窗功能，阻止已识别的广告开窗。需要脚本和 MitM，重新打开原网页后生效；视频防弹窗尚需手机验证。
+#!desc = 合并 JM 网页广告清理、MissAV 已知广告防弹窗及 51cg1.com 网页广告/播放前贴片处理。需要脚本和 MitM，重新打开原网页后生效；部分处理尚需手机验证。
 #!author = Gjf-fff
 #!icon = https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/Icon/JM-avatar.png
 #!homepage = https://github.com/Gjf-fff/RejectAD/blob/main/Tool/Loon/README_JM.md
@@ -24,5 +24,7 @@ http-response ^https?:\/\/(?:www\.)?18comic\.vip\/ script-path=https://raw.githu
 
 http-response ^https?:\/\/(?:www\.)?missav\.ai\/ script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/video_popup_patch.js,requires-body=true,timeout=10,tag=视频播放广告弹窗补丁,enable=true
 
+http-response ^https?:\/\/(?:www\.)?51cg1\.com\/ script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/cg_web_ad_patch.js?v=1.0.0,requires-body=true,timeout=10,tag=51CG网页广告补丁,enable=true
+
 [Mitm]
-hostname = 18comic.vip,www.18comic.vip,missav.ai,www.missav.ai
+hostname = 18comic.vip,www.18comic.vip,missav.ai,www.missav.ai,51cg1.com,www.51cg1.com

@@ -12,7 +12,7 @@
 https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/Plugin/JM.plugin
 ```
 
-开启脚本及 MitM，安装并信任 Loon 的 MitM 证书。插件会加入 `18comic.vip`、`www.18comic.vip`、`missav.ai` 与 `www.missav.ai`；两个 JS 自动从本仓库下载。添加后重载配置，关闭原网页标签并重新打开，使新 HTML 经过补丁。
+开启脚本及 MitM，安装并信任 Loon 的 MitM 证书。插件会加入 `18comic.vip`、`www.18comic.vip`、`missav.ai` 与 `www.missav.ai`；同时加入 `51cg1.com` 与 `www.51cg1.com`，三个 JS 自动从本仓库下载。添加后重载配置，关闭原网页标签并重新打开，使新 HTML 经过补丁。
 
 若已安装独立 `VideoPopup.plugin`，更新 JM 后停用独立插件，避免同一页面配置重复响应脚本。旧 `Ruler/VideoPopup.list` 可保留作后备。
 
@@ -57,6 +57,12 @@ JM 日志示例：
 每页另移除 1 个匹配的同源广告加载器和 1 个专用旋转脚本。用独立的 HTML DOM 解析与本次确定的广告节点作比较，移除指定广告后其余 DOM 完全一致，正常脚本、分页、表单、导航和样式表保留。还检查了旧布局样例、随机类名变化、正常同类节点、混有正常内容的父节点、不相关脚本、重复执行、其他域名、AJAX/验证/静态路径及错误状态码。
 
 结果文件：[JM_verification_206.json](JM_verification_206.json)。本次使用本地 JavaScript 回放和 HTML DOM 对比，未进行真实浏览器或 iPhone 测试。旧 HAR 197 本次没有重新回放，旧记录保留如下。
+
+## 合并的 51CG 网页广告处理
+
+HAR 207 确认网站为 `51cg1.com`。新增独立 `cg_web_ad_patch.js`，通过网页样式隐藏公开规则确认的广告容器，并对 `DPLAYER_PREROLL_AD.attachPreRollAd` 作空操作。原图片 CDN、m3u8 和视频分片继续放行。
+
+本 HAR 没有网页 HTML，新增处理依据 [AdGuard 官方中文规则](https://github.com/AdguardTeam/AdguardFilters/blob/master/ChineseFilter/sections/specific.txt)，只完成了样例 HTML/JavaScript 模拟检查，尚未验证实际页面效果。更新同一个“我不是涩神”插件并重新打开原网页即可；详见 [51CG 安装、处理范围与限制](README_CG.md)。
 
 ## 原 JM 抓包回放验证（1.0.0）
 

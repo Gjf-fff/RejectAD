@@ -1,0 +1,11 @@
+{
+  "capture_entries": 48,
+  "page_HTML_captured": 0,
+  "unchanged_capture_responses": 48,
+  "image_requests_unblocked": 25,
+  "video_requests_unblocked": 20,
+  "synthetic_HTML_injection": "passed",
+  "preroll_API_simulation": "passed",
+  "unrelated_content_and_CSP_preserved": true,
+  "device_test": false
+}
