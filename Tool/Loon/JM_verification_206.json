@@ -1,0 +1,70 @@
+{
+  "capture_entries": 41,
+  "html_changes": [
+    {
+      "entry": 14,
+      "path": "/search/photos",
+      "old_script_changed": false,
+      "logs": [
+        "[JM广告补丁] 删除 5 个广告容器及 2 个广告脚本"
+      ]
+    },
+    {
+      "entry": 28,
+      "path": "/theme",
+      "old_script_changed": false,
+      "logs": [
+        "[JM广告补丁] 删除 9 个广告容器及 2 个广告脚本"
+      ]
+    },
+    {
+      "entry": 38,
+      "path": "/albums/hanman",
+      "old_script_changed": false,
+      "logs": [
+        "[JM广告补丁] 删除 9 个广告容器及 2 个广告脚本"
+      ]
+    }
+  ],
+  "unchanged_responses": 38,
+  "synthetic_regressions": "passed",
+  "old_layout_fixture": "passed",
+  "idempotence": "passed",
+  "device_test": false,
+  "dom_checks": [
+    {
+      "entry": 14,
+      "grid_ads_removed": 4,
+      "floating_container_removed": 1,
+      "normal_links_preserved": 897,
+      "normal_images_preserved": 107,
+      "normal_scripts_preserved": 36,
+      "remaining_dom_matches_expected": true,
+      "forms_navigation_stylesheets_preserved": true,
+      "ad_loader_remaining": 0
+    },
+    {
+      "entry": 28,
+      "grid_ads_removed": 8,
+      "floating_container_removed": 1,
+      "normal_links_preserved": 244,
+      "normal_images_preserved": 29,
+      "normal_scripts_preserved": 34,
+      "remaining_dom_matches_expected": true,
+      "forms_navigation_stylesheets_preserved": true,
+      "ad_loader_remaining": 0
+    },
+    {
+      "entry": 38,
+      "grid_ads_removed": 8,
+      "floating_container_removed": 1,
+      "normal_links_preserved": 1067,
+      "normal_images_preserved": 109,
+      "normal_scripts_preserved": 35,
+      "remaining_dom_matches_expected": true,
+      "forms_navigation_stylesheets_preserved": true,
+      "ad_loader_remaining": 0
+    }
+  ],
+  "checks": "passed"
+}
