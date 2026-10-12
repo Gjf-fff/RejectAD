@@ -1,0 +1,144 @@
+{
+  "capture_entries": 106,
+  "request_script_handling": [
+    {
+      "entry": 5,
+      "status": 204
+    },
+    {
+      "entry": 11,
+      "status": 200
+    },
+    {
+      "entry": 41,
+      "status": 204
+    },
+    {
+      "entry": 47,
+      "status": 200
+    }
+  ],
+  "confirmed_ad_script_rewrites": [
+    {
+      "entry": 10,
+      "action": "reject-200"
+    },
+    {
+      "entry": 20,
+      "action": "reject-200"
+    },
+    {
+      "entry": 46,
+      "action": "reject-200"
+    },
+    {
+      "entry": 52,
+      "action": "reject-200"
+    },
+    {
+      "entry": 74,
+      "action": "reject-200"
+    }
+  ],
+  "HTML_updates": [
+    {
+      "entry": 26,
+      "logs": [
+        "[小说广告补丁 1.3.0] 已移除 0 个横幅和 1 个广告入口脚本"
+      ]
+    },
+    {
+      "entry": 34,
+      "logs": [
+        "[小说广告补丁 1.3.0] 已移除 0 个横幅和 0 个广告入口脚本"
+      ]
+    },
+    {
+      "entry": 54,
+      "logs": [
+        "[小说广告补丁 1.3.0] 已移除 0 个横幅和 1 个广告入口脚本"
+      ]
+    },
+    {
+      "entry": 76,
+      "logs": [
+        "[小说广告补丁 1.3.0] 已移除 0 个横幅和 1 个广告入口脚本"
+      ]
+    },
+    {
+      "entry": 88,
+      "logs": [
+        "[小说广告补丁 1.3.0] 已移除 0 个横幅和 0 个广告入口脚本"
+      ]
+    },
+    {
+      "entry": 104,
+      "logs": [
+        "[小说广告补丁 1.3.0] 已移除 0 个横幅和 0 个广告入口脚本"
+      ]
+    }
+  ],
+  "other_responses_unchanged": 91,
+  "cached_older_guard_upgrade": "passed",
+  "repeat_execution": "passed",
+  "normal_reader_script_boundaries": "passed",
+  "HAR_210_regression": "passed",
+  "device_test": false,
+  "DOM_checks": [
+    {
+      "entry": 26,
+      "ad_loader_scripts_removed": 1,
+      "empty_ad_slots_removed": 2,
+      "normal_links_preserved": 34,
+      "normal_images_preserved": 2,
+      "remaining_DOM_matches_expected": true,
+      "forms_stylesheets_normal_scripts_preserved": true
+    },
+    {
+      "entry": 34,
+      "ad_loader_scripts_removed": 0,
+      "empty_ad_slots_removed": 0,
+      "normal_links_preserved": 53,
+      "normal_images_preserved": 10,
+      "remaining_DOM_matches_expected": true,
+      "forms_stylesheets_normal_scripts_preserved": true
+    },
+    {
+      "entry": 54,
+      "ad_loader_scripts_removed": 1,
+      "empty_ad_slots_removed": 0,
+      "normal_links_preserved": 120,
+      "normal_images_preserved": 2,
+      "remaining_DOM_matches_expected": true,
+      "forms_stylesheets_normal_scripts_preserved": true
+    },
+    {
+      "entry": 76,
+      "ad_loader_scripts_removed": 1,
+      "empty_ad_slots_removed": 0,
+      "normal_links_preserved": 118,
+      "normal_images_preserved": 2,
+      "remaining_DOM_matches_expected": true,
+      "forms_stylesheets_normal_scripts_preserved": true
+    },
+    {
+      "entry": 88,
+      "ad_loader_scripts_removed": 0,
+      "empty_ad_slots_removed": 0,
+      "normal_links_preserved": 174,
+      "normal_images_preserved": 10,
+      "remaining_DOM_matches_expected": true,
+      "forms_stylesheets_normal_scripts_preserved": true
+    },
+    {
+      "entry": 104,
+      "ad_loader_scripts_removed": 0,
+      "empty_ad_slots_removed": 0,
+      "normal_links_preserved": 174,
+      "normal_images_preserved": 10,
+      "remaining_DOM_matches_expected": true,
+      "forms_stylesheets_normal_scripts_preserved": true
+    }
+  ],
+  "checks": "passed"
+}
