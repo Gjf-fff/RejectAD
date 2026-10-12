@@ -32,12 +32,12 @@ http-response ^https?:\/\/(?:www\.)?missav\.ai\/ script-path=https://raw.githubu
 
 http-response ^https?:\/\/(?:www\.)?51cg1\.com\/ script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/cg_web_ad_patch.js?v=1.0.0,requires-body=true,timeout=10,tag=51CG网页广告补丁,enable=true
 
-http-request ^https?:\/\/g\.yfrwa\.cn\/2023\/07\/(?:20220343877|20220354862)\.txt(?:\?|$) script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/novel_web_ad_patch.js?v=1.1.0,timeout=10,tag=小说广告素材替换,enable=true
+http-request ^https?:\/\/g\.yfrwa\.cn\/(?:2023\/07\/(?:20220343877|20220354862)|2021\/12\/31160939776)\.txt(?:\?|$) script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/novel_web_ad_patch.js?v=1.2.0,timeout=10,tag=小说广告素材替换,enable=true
 
-http-response ^https?:\/\/m\.03banzhu\.com\/ script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/novel_web_ad_patch.js?v=1.1.0,requires-body=true,timeout=10,tag=小说网页广告补丁,enable=true
+http-response ^https?:\/\/[a-z0-9.-]*banzhu[a-z0-9.-]*(?::\d+)?\/ script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/novel_web_ad_patch.js?v=1.2.0,requires-body=true,timeout=10,tag=小说网页广告补丁,enable=true
 
 # 仅当 Referer/Origin 为小说站时，由脚本取消已确认的推广导航。
-http-request ^https?:\/\/(?:www\.pm1256tiger\.vip:9527\/(?:\?|$)|www\.hm1614t\.vip:9527\/(?:\?|$)|www\.c4jsrnirobpg\.vip:20110\/news\/decide-obscure\.html(?:\?|$)) script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/novel_web_ad_patch.js?v=1.1.0,timeout=10,tag=小说推广导航拦截,enable=true
+http-request ^https?:\/\/(?:www\.(?:pm1256tiger|hm1614t|hm1619t)\.vip:9527\/?(?:\?|$)|2\.s5825hu\.cc:8888\/?(?:\?|$)|1214gc\.x2062ys\.com:8005\/(?:cc|d)\/3876(?:\?|$)|www\.c4jsrnirobpg\.vip:20110\/news\/decide-obscure\.html(?:\?|$)) script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/novel_web_ad_patch.js?v=1.2.0,timeout=10,tag=小说推广导航拦截,enable=true
 
 [Mitm]
-hostname = 18comic.vip,www.18comic.vip,missav.ai,www.missav.ai,51cg1.com,www.51cg1.com,m.03banzhu.com,g.yfrwa.cn,www.dell.com,a.magsrv.com,www.pm1256tiger.vip,www.hm1614t.vip,www.c4jsrnirobpg.vip
+hostname = 18comic.vip,www.18comic.vip,missav.ai,www.missav.ai,51cg1.com,www.51cg1.com,*banzhu*,g.yfrwa.cn,www.dell.com,a.magsrv.com,www.pm1256tiger.vip,www.hm1614t.vip,www.c4jsrnirobpg.vip,www.hm1619t.vip,2.s5825hu.cc,1214gc.x2062ys.com

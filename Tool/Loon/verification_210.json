@@ -1,0 +1,95 @@
+{
+  "capture_entries": 54,
+  "request_side_handling": [
+    {
+      "entry": 8,
+      "status": 204
+    },
+    {
+      "entry": 10,
+      "status": 204
+    },
+    {
+      "entry": 11,
+      "status": 204
+    },
+    {
+      "entry": 13,
+      "status": 200
+    },
+    {
+      "entry": 17,
+      "status": 204
+    },
+    {
+      "entry": 43,
+      "status": 204
+    },
+    {
+      "entry": 45,
+      "status": 200
+    },
+    {
+      "entry": 47,
+      "status": 204
+    }
+  ],
+  "HTML_pages": [
+    {
+      "entry": 30,
+      "logs": [
+        "[小说广告补丁] 已移除 2 个静态广告横幅，注入已知广告节点和开窗拦截"
+      ]
+    },
+    {
+      "entry": 40,
+      "logs": [
+        "[小说广告补丁] 已移除 0 个静态广告横幅，注入已知广告节点和开窗拦截"
+      ]
+    },
+    {
+      "entry": 52,
+      "logs": [
+        "[小说广告补丁] 已移除 0 个静态广告横幅，注入已知广告节点和开窗拦截"
+      ]
+    }
+  ],
+  "other_responses_unchanged": 43,
+  "keyword_hostname_and_origin_boundary_checks": "passed",
+  "normal_direct_visits_and_other_API_paths_preserved": true,
+  "HAR_209_regression": "passed",
+  "device_test": false,
+  "DOM_checks": [
+    {
+      "entry": 30,
+      "confirmed_static_banners_removed": 2,
+      "empty_ad_slots_removed": 2,
+      "normal_links_preserved": 35,
+      "normal_images_preserved": 2,
+      "remaining_DOM_matches_expected": true,
+      "all_original_scripts_preserved": true,
+      "forms_stylesheets_preserved": true
+    },
+    {
+      "entry": 40,
+      "confirmed_static_banners_removed": 0,
+      "empty_ad_slots_removed": 4,
+      "normal_links_preserved": 67,
+      "normal_images_preserved": 10,
+      "remaining_DOM_matches_expected": true,
+      "all_original_scripts_preserved": true,
+      "forms_stylesheets_preserved": true
+    },
+    {
+      "entry": 52,
+      "confirmed_static_banners_removed": 0,
+      "empty_ad_slots_removed": 2,
+      "normal_links_preserved": 120,
+      "normal_images_preserved": 2,
+      "remaining_DOM_matches_expected": true,
+      "all_original_scripts_preserved": true,
+      "forms_stylesheets_preserved": true
+    }
+  ],
+  "checks": "passed"
+}
