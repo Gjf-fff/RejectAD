@@ -1,5 +1,5 @@
 #!name = 我不是涩神
-#!desc = 合并 JM 网页广告清理、MissAV 已知广告防弹窗及 51cg1.com 网页广告/播放前贴片处理。需要脚本和 MitM，重新打开原网页后生效；部分处理尚需手机验证。
+#!desc = 合并 JM、小说网页去广告，MissAV 已知广告防弹窗及 51CG 播放前贴片处理。需要复写、脚本和 MitM，重新打开原网页后生效；部分处理尚需手机验证。
 #!author = Gjf-fff
 #!icon = https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/Icon/JM-avatar.png
 #!homepage = https://github.com/Gjf-fff/RejectAD/blob/main/Tool/Loon/README_JM.md
@@ -19,12 +19,22 @@ DOMAIN,z6v2p9a8.bkcdn.net,REJECT
 DOMAIN,sc.ec424.com,REJECT
 DOMAIN,ads.exoclick.com,REJECT
 
+[Rewrite]
+# HAR 208：仅处理确认的广告文件；正常封面、勋章、视频及其他 jquery 文件不匹配。
+^https?:\/\/(?:www\.)?18comic\.vip\/templates\/frontend\/airav\/js\/jquery\.7_2dc\.js(?:\?|$) reject-200
+^https?:\/\/a\.magsrv\.com\/ad-provider\.js(?:\?|$) reject-200
+^https?:\/\/www\.dell\.com\/community\/assets\/community\/687062f5-603c-4f5f-ab9d-31aa7cacb376\/manhua-9fac3c05-eef9-44ee-b0da-9768c33160a8-512816432\.gif(?:\?|$) reject-img
+
 [Script]
-http-response ^https?:\/\/(?:www\.)?18comic\.vip\/ script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/jm_web_ad_patch.js?v=1.1.0,requires-body=true,timeout=10,tag=JM网页广告补丁,enable=true
+http-response ^https?:\/\/(?:www\.)?18comic\.vip\/ script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/jm_web_ad_patch.js?v=1.1.1,requires-body=true,timeout=10,tag=JM网页广告补丁,enable=true
 
 http-response ^https?:\/\/(?:www\.)?missav\.ai\/ script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/video_popup_patch.js,requires-body=true,timeout=10,tag=视频播放广告弹窗补丁,enable=true
 
 http-response ^https?:\/\/(?:www\.)?51cg1\.com\/ script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/cg_web_ad_patch.js?v=1.0.0,requires-body=true,timeout=10,tag=51CG网页广告补丁,enable=true
 
+http-request ^https?:\/\/g\.yfrwa\.cn\/2023\/07\/20220343877\.txt(?:\?|$) script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/novel_web_ad_patch.js?v=1.0.0,timeout=10,tag=小说广告素材替换,enable=true
+
+http-response ^https?:\/\/m\.03banzhu\.com\/ script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/novel_web_ad_patch.js?v=1.0.0,requires-body=true,timeout=10,tag=小说网页广告补丁,enable=true
+
 [Mitm]
-hostname = 18comic.vip,www.18comic.vip,missav.ai,www.missav.ai,51cg1.com,www.51cg1.com
+hostname = 18comic.vip,www.18comic.vip,missav.ai,www.missav.ai,51cg1.com,www.51cg1.com,m.03banzhu.com,g.yfrwa.cn,www.dell.com,a.magsrv.com

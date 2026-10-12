@@ -1,6 +1,6 @@
 # JM 网页广告补丁（Loon）
 
-根据 HAR 197 和 2026-10-11 的 HAR 206 编写，针对 `18comic.vip` 网页。当前脚本版本为 1.1.0。包含 HTML 广告容器清理与抓包确认的第三方广告主机拦截。
+根据 HAR 197 和 2026-10-11 的 HAR 206 编写，针对 `18comic.vip` 网页。当前 JM 脚本版本为 1.1.1。包含 HTML 广告容器清理与抓包确认的第三方广告主机拦截。
 
 现已合并 `missav.ai` 视频播放防弹窗功能，更新同一个 JM 插件即可。JM 图标和插件订阅地址保持不变，视频防弹窗与原域名规则继续保留。
 
@@ -12,17 +12,23 @@
 https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/Plugin/JM.plugin
 ```
 
-开启脚本及 MitM，安装并信任 Loon 的 MitM 证书。插件会加入 `18comic.vip`、`www.18comic.vip`、`missav.ai` 与 `www.missav.ai`；同时加入 `51cg1.com` 与 `www.51cg1.com`，三个 JS 自动从本仓库下载。添加后重载配置，关闭原网页标签并重新打开，使新 HTML 经过补丁。
+开启复写、脚本及 MitM，安装并信任 Loon 的 MitM 证书。插件会加入 `18comic.vip`、`www.18comic.vip`、`missav.ai` 与 `www.missav.ai`；同时加入 `51cg1.com` 与 `www.51cg1.com`，并新增 `m.03banzhu.com`、`g.yfrwa.cn`、`www.dell.com` 与 `a.magsrv.com`；四个 JS 自动从本仓库下载。添加后重载配置，关闭原网页标签并重新打开，使新 HTML 经过补丁。
 
 若已安装独立 `VideoPopup.plugin`，更新 JM 后停用独立插件，避免同一页面配置重复响应脚本。旧 `Ruler/VideoPopup.list` 可保留作后备。
 
-更新插件会使用带 `?v=1.1.0` 的 JM 脚本地址，便于重新下载新版脚本。仍需重新加载原网页；已缓存并显示的旧广告不会自动消失。
+更新插件会使用带 `?v=1.1.1` 的 JM 脚本地址，便于重新下载新版脚本。仍需重新加载原网页；已缓存并显示的旧广告不会自动消失。
 
 JM 日志示例：
 
 ```text
 [JM广告补丁] 删除 9 个广告容器及 2 个广告脚本
 ```
+
+## HAR 208 更新（1.1.1）
+
+已补充 JM 的确定同源加载器和 `a.magsrv.com/ad-provider.js`，以及 `m.03banzhu.com` 的两张已确认推广横幅和已知广告链接/开窗处理。新增资源处理匹配本次抓包 4 条请求，其余 133 条未匹配；旧 HAR 206 的回放与 DOM 检查仍通过。小说网页部分只有样例模拟检查，尚需手机验证。
+
+只处理完整确认路径，未封锁整个图片 CDN 或 Dell 域名。详见 [HAR 208 处理范围、验证与限制](README_208.md)。
 
 ## 处理范围
 

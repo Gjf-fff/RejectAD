@@ -1,0 +1,30 @@
+{
+  "capture_entries": 137,
+  "page_HTML_captured": 0,
+  "resource_rules_matched": [
+    {
+      "entry": 21,
+      "action": "valid transparent base64 GIF"
+    },
+    {
+      "entry": 25,
+      "action": "reject-img"
+    },
+    {
+      "entry": 99,
+      "action": "reject-200"
+    },
+    {
+      "entry": 122,
+      "action": "reject-200"
+    }
+  ],
+  "other_requests_not_matched": 133,
+  "novel_DOM_and_open_API_simulation": "passed",
+  "normal_links_images_forms_preserved_in_sample": true,
+  "known_JM_loader_without_ad_slots": "passed",
+  "synthetic_boundary_checks": "passed",
+  "device_test": false,
+  "HAR_206_regression": "passed: 41 entries, 3 HTML pages, remaining DOM unchanged",
+  "replacement_GIF_decoding": "passed: 1x1 transparent"
+}
