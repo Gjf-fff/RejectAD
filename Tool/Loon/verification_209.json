@@ -1,0 +1,30 @@
+{
+  "capture_entries": 101,
+  "parent_novel_HTML_captured": false,
+  "known_promotional_requests_handled": [
+    {
+      "entry": 97,
+      "status": 204
+    },
+    {
+      "entry": 98,
+      "status": 204
+    },
+    {
+      "entry": 99,
+      "status": 200
+    }
+  ],
+  "other_capture_requests_unchanged": 98,
+  "request_origin_and_path_boundaries": "passed",
+  "normal_direct_visits_and_API_requests_preserved": true,
+  "new_and_old_banner_and_popup_simulation": "passed",
+  "HAR_208_regression": "passed",
+  "HAR_208_additional_known_navigation_requests_handled": [
+    20,
+    66,
+    73
+  ],
+  "real_browser_navigation_test": false,
+  "device_test": false
+}
