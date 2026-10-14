@@ -21,7 +21,7 @@ DOMAIN,ads.exoclick.com,REJECT
 
 [Rewrite]
 # HAR 208：仅处理确认的广告文件；正常封面、勋章、视频及其他 jquery 文件不匹配。
-^https?:\/\/(?:www\.)?18comic\.vip\/templates\/frontend\/airav\/js\/jquery\.7_2dc\.js(?:\?|$) reject-200
+^https?:\/\/(?:www\.)?(?:18comic\.vip|jmcomic-zzz\.one)\/templates\/frontend\/airav\/js\/jquery\.7_2dc\.js(?:\?|$) reject-200
 ^https?:\/\/a\.magsrv\.com\/ad-provider\.js(?:\?|$) reject-200
 ^https?:\/\/www\.dell\.com\/community\/assets\/community\/687062f5-603c-4f5f-ab9d-31aa7cacb376\/manhua-9fac3c05-eef9-44ee-b0da-9768c33160a8-512816432\.gif(?:\?|$) reject-img
 
@@ -29,8 +29,11 @@ DOMAIN,ads.exoclick.com,REJECT
 ^https?:\/\/m\.diyibanzhu\.me\/js\/js4\.js(?:\?|$) reject-200
 ^https?:\/\/www\.plpyvxfgxbz6nuhh\.app:20110\/js\/in-static\.js(?:\?|$) reject-200
 
+# HAR 215：新 JM 域名 CDN 的两张已确认第三方推广图；漫画和站点导航保留。
+^https?:\/\/cdn-msp2\.jmcomic-zzz\.one\/static\/resources\/images\/(?:300x-250\.gif|300x250GIF\((?:%E5%B7%A6%EF%BC%89|左）)\.gif)(?:\?|$) reject-img
+
 [Script]
-http-response ^https?:\/\/(?:www\.)?18comic\.vip\/ script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/jm_web_ad_patch.js?v=1.1.1,requires-body=true,timeout=10,tag=JM网页广告补丁,enable=true
+http-response ^https?:\/\/(?:www\.)?(?:18comic\.vip|jmcomic-zzz\.one)\/ script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/jm_web_ad_patch.js?v=1.1.2,requires-body=true,timeout=10,tag=JM网页广告补丁,enable=true
 
 http-response ^https?:\/\/(?:www\.)?missav\.ai\/ script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/video_popup_patch.js,requires-body=true,timeout=10,tag=视频播放广告弹窗补丁,enable=true
 
@@ -44,5 +47,6 @@ http-response ^https?:\/\/[a-z0-9.-]*banzhu[a-z0-9.-]*(?::\d+)?\/ script-path=ht
 http-request ^https?:\/\/(?:www\.(?:pm1256tiger|hm1614t|hm1619t)\.vip:9527\/?(?:\?|$)|2\.s5825hu\.cc:8888\/?(?:\?|$)|1214gc\.x2062ys\.com:8005\/(?:cc|d)\/3876(?:\?|$)|www\.c4jsrnirobpg\.vip:20110\/news\/decide-obscure\.html(?:\?|$)) script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/novel_web_ad_patch.js?v=1.3.0,timeout=10,tag=小说推广导航拦截,enable=true
 
 [Mitm]
-hostname = 18comic.vip,www.18comic.vip,missav.ai,www.missav.ai,51cg1.com,www.51cg1.com,*banzhu*,g.yfrwa.cn,www.dell.com,a.magsrv.com,www.pm1256tiger.vip,www.hm1614t.vip,www.c4jsrnirobpg.vip,www.hm1619t.vip,2.s5825hu.cc,1214gc.x2062ys.com,www.plpyvxfgxbz6nuhh.app
+hostname = 18comic.vip,www.18comic.vip,jmcomic-zzz.one,www.jmcomic-zzz.one,cdn-msp2.jmcomic-zzz.one,missav.ai,www.missav.ai,51cg1.com,www.51cg1.com,*banzhu*,g.yfrwa.cn,www.dell.com,a.magsrv.com,www.pm1256tiger.vip,www.hm1614t.vip,www.c4jsrnirobpg.vip,www.hm1619t.vip,2.s5825hu.cc,1214gc.x2062ys.com,www.plpyvxfgxbz6nuhh.app
+
 

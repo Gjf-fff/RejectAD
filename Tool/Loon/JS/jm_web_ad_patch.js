@@ -1,7 +1,7 @@
 /* JM 网页广告补丁 / Loon HTTP Response Script
- * Version: 1.1.1 (2026-10-12)
+ * Version: 1.1.2 (2026-10-14)
  * 根据 HAR 197/206/208 中的广告容器及同源加载器编写。
- * 只处理 18comic.vip 的成功完整 HTML 响应；保留正常内容、导航、表单及验证页面。
+ * 只处理 18comic.vip / jmcomic-zzz.one 的成功完整 HTML 响应；保留正常内容、导航、表单及验证页面。
  */
 (function () {
   "use strict";
@@ -9,7 +9,7 @@
   try {
     var url = typeof $request !== "undefined" ? $request.url || "" : "";
     var response = typeof $response !== "undefined" ? $response : null;
-    if (/^https?:\/\/(?:www\.)?18comic\.vip\//i.test(url) &&
+    if (/^https?:\/\/(?:www\.)?(?:18comic\.vip|jmcomic-zzz\.one)\//i.test(url) &&
         !/^https?:\/\/[^/]+\/(?:cdn-cgi|templates|static|ajax)(?:\/|\?|$)/i.test(url) &&
         response && Number(response.status) >= 200 && Number(response.status) < 300 &&
         typeof response.body === "string" && /<(?:!doctype\s+html|html|head|body)\b/i.test(response.body)) {
@@ -94,10 +94,10 @@
         var src = attribute(opening, "src");
         var adSource = /^(?:https?:)?\/\/(?:a\.chnsrv\.com|a\.magsrv\.com)\/ad-provider\.js(?:\?|$)/i.test(src) ||
           /^(?:https?:)?\/\/campfirecroutondecorator\.com\/bn\.js(?:\?|$)/i.test(src) ||
-          /^(?:(?:https?:)?\/\/(?:www\.)?18comic\.vip)?\/templates\/frontend\/airav\/js\/(?:jquery\.)?(?:33_a1e|7_2dc)\.js(?:\?|$)/i.test(src);
+          /^(?:(?:https?:)?\/\/(?:www\.)?(?:18comic\.vip|jmcomic-zzz\.one))?\/templates\/frontend\/airav\/js\/(?:jquery\.)?(?:33_a1e|7_2dc)\.js(?:\?|$)/i.test(src);
         var fallback = !src && /getexoloader/.test(script) && /ExoLoader\.(?:serve|addZone)\s*\(/.test(script);
         // 新同源脚本只有在文件标识与已确认广告容器内的加载槽 ID 对应时才移除。
-        var loader = /^(?:(?:https?:)?\/\/(?:www\.)?18comic\.vip)?\/templates\/frontend\/airav\/js\/(?:jquery\.)?(\d+_[a-f0-9]{3})\.js(?:\?|$)/i.exec(src);
+        var loader = /^(?:(?:https?:)?\/\/(?:www\.)?(?:18comic\.vip|jmcomic-zzz\.one))?\/templates\/frontend\/airav\/js\/(?:jquery\.)?(\d+_[a-f0-9]{3})\.js(?:\?|$)/i.exec(src);
         var linkedLoader = loader && adMarkup.some(function (markup) {
           return new RegExp('\\bid\\s*=\\s*["\']div_\\d*' + loader[1] + '_\\d+["\']', "i").test(markup);
         });
@@ -122,5 +122,6 @@
   }
   $done(result);
 })();
+
 
 

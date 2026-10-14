@@ -1,6 +1,6 @@
 # JM 网页广告补丁（Loon）
 
-根据 HAR 197 和 2026-10-11 的 HAR 206 编写，针对 `18comic.vip` 网页。当前 JM 脚本版本为 1.1.1。包含 HTML 广告容器清理与抓包确认的第三方广告主机拦截。
+根据 HAR 197 和 2026-10-11 的 HAR 206 编写，针对 `18comic.vip` 与 `jmcomic-zzz.one` 网页。当前 JM 脚本版本为 1.1.2。包含 HTML 广告容器清理与抓包确认的第三方广告主机拦截。
 
 现已合并 `missav.ai` 视频播放防弹窗功能，更新同一个 JM 插件即可。JM 图标和插件订阅地址保持不变，视频防弹窗与原域名规则继续保留。
 
@@ -12,17 +12,27 @@
 https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/Plugin/JM.plugin
 ```
 
-开启复写、脚本及 MitM，安装并信任 Loon 的 MitM 证书。插件会加入 `18comic.vip`、`www.18comic.vip`、`missav.ai` 与 `www.missav.ai`；同时加入 `51cg1.com` 与 `www.51cg1.com`，并新增 `m.03banzhu.com`、`g.yfrwa.cn`、`www.dell.com` 与 `a.magsrv.com`；四个 JS 自动从本仓库下载。添加后重载配置，关闭原网页标签并重新打开，使新 HTML 经过补丁。
+开启复写、脚本及 MitM，安装并信任 Loon 的 MitM 证书。插件会加入 `18comic.vip`、`www.18comic.vip`、`jmcomic-zzz.one`、`www.jmcomic-zzz.one`、`cdn-msp2.jmcomic-zzz.one`、`missav.ai` 与 `www.missav.ai`；同时加入 `51cg1.com` 与 `www.51cg1.com`，并新增 `m.03banzhu.com`、`g.yfrwa.cn`、`www.dell.com` 与 `a.magsrv.com`；四个 JS 自动从本仓库下载。添加后重载配置，关闭原网页标签并重新打开，使新 HTML 经过补丁。
 
 若已安装独立 `VideoPopup.plugin`，更新 JM 后停用独立插件，避免同一页面配置重复响应脚本。旧 `Ruler/VideoPopup.list` 可保留作后备。
 
-更新插件会使用带 `?v=1.1.1` 的 JM 脚本地址，便于重新下载新版脚本。仍需重新加载原网页；已缓存并显示的旧广告不会自动消失。
+更新插件会使用带 `?v=1.1.2` 的 JM 脚本地址，便于重新下载新版脚本。仍需重新加载原网页；已缓存并显示的旧广告不会自动消失。
 
 JM 日志示例：
 
 ```text
 [JM广告补丁] 删除 9 个广告容器及 2 个广告脚本
 ```
+
+## HAR 215：新增 JM 域名（JM 脚本 1.1.2）
+
+从本次请求的 Referer 确认网页来源为 `jmcomic-zzz.one`。已将它和 `www.jmcomic-zzz.one` 加入 JM 响应脚本、同源广告加载器处理及 MitM，同时保留 `18comic.vip`。新增对 `cdn-msp2.jmcomic-zzz.one` 下两张确定第三方推广图 `300x-250.gif`、`300x250GIF(%E5%B7%A6%EF%BC%89.gif` 的精确素材复写，未封锁整个 CDN。
+
+抓包共 94 条记录，没有页面 HTML。新增图片规则命中 2 条推广图请求，其余 85 条图片请求保留，包括漫画正文、封面、站点导航和支持提示。广告主机已有规则继续保留；没有将 Clarity 统计请求作为新的广告入口封锁。
+
+HAR 206 的三个原页面输出与上一版完全一致；把这些页面与 URL 映射到两个新域名后的六次兼容性回放均通过，并验证了域名边界、绝对同源加载器与重复执行。此回放不代表已验证新域名的实际页面布局；本次没有新站 HTML 或真实 iPhone 测试。结果见 [JM_verification_215.json](JM_verification_215.json)。
+
+更新现有“我不是涩神”插件后，关闭旧 JM 标签页再重新打开。JM 脚本地址更新为 `?v=1.1.2`，插件名称、图标及小说、MissAV、51CG 功能不变。
 
 ## HAR 211：移除强制跳转的广告入口（小说脚本 1.3.0）
 
@@ -56,7 +66,7 @@ JM 日志示例：
 - 网站自身托管的 NeverBlock/ExoLoader 加载器 `jquery.33_a1e.js`，以及调用 `ExoLoader.serve` 的内联回退代码。HAR 197 中的 `/templates/frontend/airav/js/33_a1e.js` 确认返回广告数据；HAR 206 页面引用的新加载器为 `jquery.7_2dc.js`。新文件只在标识与已确认广告容器内的加载槽 ID 对应时移除，不屏蔽全部 jquery 脚本。
 - 抓包确认的 11 个第三方广告主机。插件按完整主机名拒绝连接，包括广告 API、跟踪跳转及素材主机；这些主机上的广告请求在其他网站也会被拦截。
 
-原 JM HTML 脚本只修改 `18comic.vip` 的成功完整 HTML 响应，跳过静态资源、AJAX、Cloudflare 验证路径及非成功响应。普通封面 CDN、分页、导航、表单、正常 iframe 与窗口打开逻辑均保留。没有按图片尺寸、关键词、高 z-index 或所有 iframe 进行过滤。
+原 JM HTML 脚本只修改 `18comic.vip` 与 `jmcomic-zzz.one`（含 www）的成功完整 HTML 响应，跳过静态资源、AJAX、Cloudflare 验证路径及非成功响应。普通封面 CDN、分页、导航、表单、正常 iframe 与窗口打开逻辑均保留。没有按图片尺寸、关键词、高 z-index 或所有 iframe 进行过滤。
 
 ## 合并的视频防弹窗功能
 
@@ -112,3 +122,4 @@ HAR 共 295 条记录。域名规则匹配 49 条已确认广告链路请求；H
 同一网页只保留一个匹配的响应脚本。若其他插件对该站点执行响应体重写，需要关闭对应冲突行，否则本脚本可能无法执行。纯域名去广告规则可以配合使用；若本地规则显式放行上述广告主机，按 Loon 的规则来源优先级，本地规则优先于插件规则，需要调整相应放行行。
 
 官方说明：[脚本执行规则](https://nsloon.app/docs/Script/script_v2/)、[分流规则优先级](https://nsloon.app/docs/Rule/)。
+

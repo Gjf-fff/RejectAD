@@ -1,0 +1,15 @@
+{
+  "capture_entries": 94,
+  "captured_page_html": 0,
+  "page_host_from_referer": "jmcomic-zzz.one",
+  "confirmed_promotion_image_matches": 2,
+  "images_preserved": 85,
+  "response_script_changes": 0,
+  "HAR_206_original_domain_output_identical": true,
+  "HAR_206_pages_replayed_under_each_new_alias": 3,
+  "new_alias_replays": 6,
+  "absolute_loader_and_host_boundaries": "passed",
+  "repeat_execution": "passed",
+  "device_test": false,
+  "checks": "passed"
+}
