@@ -33,7 +33,7 @@ DOMAIN,ads.exoclick.com,REJECT
 ^https?:\/\/cdn-msp2\.jmcomic-zzz\.one\/static\/resources\/images\/(?:300x-250\.gif|300x250GIF\((?:%E5%B7%A6%EF%BC%89|左）)\.gif)(?:\?|$) reject-img
 
 [Script]
-http-response ^https?:\/\/(?:www\.)?(?:18comic\.vip|jmcomic-zzz\.one)\/ script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/jm_web_ad_patch.js?v=1.1.2,requires-body=true,timeout=10,tag=JM网页广告补丁,enable=true
+http-response ^https?:\/\/(?:www\.)?(?:18comic\.vip|jmcomic-zzz\.one)\/ script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/jm_web_ad_patch.js?v=1.1.3,requires-body=true,timeout=10,tag=JM网页广告补丁,enable=true
 
 http-response ^https?:\/\/(?:www\.)?missav\.ai\/ script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/video_popup_patch.js,requires-body=true,timeout=10,tag=视频播放广告弹窗补丁,enable=true
 
@@ -48,5 +48,6 @@ http-request ^https?:\/\/(?:www\.(?:pm1256tiger|hm1614t|hm1619t)\.vip:9527\/?(?:
 
 [Mitm]
 hostname = 18comic.vip,www.18comic.vip,jmcomic-zzz.one,www.jmcomic-zzz.one,cdn-msp2.jmcomic-zzz.one,missav.ai,www.missav.ai,51cg1.com,www.51cg1.com,*banzhu*,g.yfrwa.cn,www.dell.com,a.magsrv.com,www.pm1256tiger.vip,www.hm1614t.vip,www.c4jsrnirobpg.vip,www.hm1619t.vip,2.s5825hu.cc,1214gc.x2062ys.com,www.plpyvxfgxbz6nuhh.app
+
 
 

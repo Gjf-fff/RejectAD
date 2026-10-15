@@ -1,6 +1,6 @@
 /* JM 网页广告补丁 / Loon HTTP Response Script
- * Version: 1.1.2 (2026-10-14)
- * 根据 HAR 197/206/208 中的广告容器及同源加载器编写。
+ * Version: 1.1.3 (2026-10-15)
+ * 根据 HAR 197/206/208/218 中的广告容器及同源加载器编写。
  * 只处理 18comic.vip / jmcomic-zzz.one 的成功完整 HTML 响应；保留正常内容、导航、表单及验证页面。
  */
 (function () {
@@ -27,6 +27,10 @@
       var ranges = [];
       // 从带明确广告标记的广告位学习本页随机类名，而非固定旧哈希。
       var adFamilies = { "c835e-33_e": true };
+      // HAR 218 的详情页广告槽；不包含同页的站点支持入口 album_detail。
+      function isAdGroup(group) {
+        return /^(?:all_albums_\d+|list\d+|sticky2|content_page[12]|album_detail_mobile|album_related[1-4])$/.test(group);
+      }
       // 跳过注释和 script/style 文本，避免将 JS 字符串里的 <div> 当成 HTML。
       var tokens = /<!--[\s\S]*?-->|<script\b[^>]*>[\s\S]*?<\/script\s*>|<style\b[^>]*>[\s\S]*?<\/style\s*>|<\/?div\b(?:"[^"]*"|'[^']*'|[^'">])*>/gi;
       var token;
@@ -46,12 +50,12 @@
             node.closeStart = token.index;
             node.end = tokens.lastIndex;
             nodes.push(node);
-            if (/^(?:all_albums_\d+|list\d+|sticky2)$/.test(node.group)) {
+            if (isAdGroup(node.group)) {
               var markup = body.slice(node.openEnd, node.closeStart);
               var labelled = /<[^>]+\bclass\s*=\s*["'][^"']*\bgroup-notice\b[^"']*["'][^>]*>\s*AD\s*</i.test(markup) ||
                 /<ins\b[^>]*\bdata-zoneid\s*=/i.test(markup);
               if (labelled) node.classes.split(/\s+/).forEach(function (name) {
-                if (/^[a-f0-9]{5}-\d+_[a-z0-9]+$/i.test(name)) adFamilies[name] = true;
+                if (/^[a-f0-9]{5,6}-[a-f0-9]{1,2}_[a-z0-9]+$/i.test(name)) adFamilies[name] = true;
               });
             }
           }
@@ -67,7 +71,7 @@
       nodes.forEach(function (node) {
         var isAd = familyNames.some(function (family) {
           return hasClass(node.classes, family + "_sticky2") ||
-            (hasClass(node.classes, family) && /^(?:all_albums_\d+|list\d+|sticky2)$/.test(node.group));
+            (hasClass(node.classes, family) && isAdGroup(node.group));
         });
         if (!isAd) return;
         adMarkup.push(body.slice(node.start, node.end));
@@ -97,7 +101,7 @@
           /^(?:(?:https?:)?\/\/(?:www\.)?(?:18comic\.vip|jmcomic-zzz\.one))?\/templates\/frontend\/airav\/js\/(?:jquery\.)?(?:33_a1e|7_2dc)\.js(?:\?|$)/i.test(src);
         var fallback = !src && /getexoloader/.test(script) && /ExoLoader\.(?:serve|addZone)\s*\(/.test(script);
         // 新同源脚本只有在文件标识与已确认广告容器内的加载槽 ID 对应时才移除。
-        var loader = /^(?:(?:https?:)?\/\/(?:www\.)?(?:18comic\.vip|jmcomic-zzz\.one))?\/templates\/frontend\/airav\/js\/(?:jquery\.)?(\d+_[a-f0-9]{3})\.js(?:\?|$)/i.exec(src);
+        var loader = /^(?:(?:https?:)?\/\/(?:www\.)?(?:18comic\.vip|jmcomic-zzz\.one))?\/templates\/frontend\/airav\/js\/(?:jquery\.)?((?:\d+_[a-f0-9]{3}|[a-f0-9]{2}_[a-f0-9]{4}))\.js(?:\?|$)/i.exec(src);
         var linkedLoader = loader && adMarkup.some(function (markup) {
           return new RegExp('\\bid\\s*=\\s*["\']div_\\d*' + loader[1] + '_\\d+["\']', "i").test(markup);
         });
@@ -122,6 +126,7 @@
   }
   $done(result);
 })();
+
 
 
 
