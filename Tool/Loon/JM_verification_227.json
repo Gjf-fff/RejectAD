@@ -1,0 +1,35 @@
+{
+  "capture_entries": 95,
+  "HTML_changes": [
+    {
+      "entry": 50,
+      "logs": [
+        "[JM广告补丁] 删除 9 个广告容器及 2 个广告脚本"
+      ]
+    }
+  ],
+  "unchanged_responses": 94,
+  "confirmed_overlay_GIF_rewrites": 1,
+  "normal_reader_scripts_preserved": true,
+  "reading_config_preserved": true,
+  "retained_detection_initializer_without_detector": "safe_noop",
+  "HAR_206_and_218_outputs_identical": true,
+  "regression_pages": 4,
+  "new_alias_replays": 2,
+  "exact_resource_boundaries": "passed",
+  "repeat_execution": "passed",
+  "device_test": false,
+  "checks": "passed",
+  "DOM_check": {
+    "advertising_containers_removed": 9,
+    "ad_only_wrappers_removed": 8,
+    "separate_ad_or_detection_scripts_removed": 2,
+    "targeted_overlay_style_added": true,
+    "remaining_DOM_matches_expected": true,
+    "scramble_page_elements_preserved": 32,
+    "normal_images_preserved": 83,
+    "normal_links_preserved": 542,
+    "forms_preserved": 6,
+    "reading_configuration_and_inline_scripts_preserved": true
+  }
+}

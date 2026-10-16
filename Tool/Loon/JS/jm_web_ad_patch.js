@@ -1,6 +1,6 @@
 /* JM 网页广告补丁 / Loon HTTP Response Script
- * Version: 1.1.3 (2026-10-15)
- * 根据 HAR 197/206/208/218 中的广告容器及同源加载器编写。
+ * Version: 1.1.4 (2026-10-16)
+ * 根据 HAR 197/206/208/218/227 中的广告容器及同源加载器编写。
  * 只处理 18comic.vip / jmcomic-zzz.one 的成功完整 HTML 响应；保留正常内容、导航、表单及验证页面。
  */
 (function () {
@@ -29,7 +29,7 @@
       var adFamilies = { "c835e-33_e": true };
       // HAR 218 的详情页广告槽；不包含同页的站点支持入口 album_detail。
       function isAdGroup(group) {
-        return /^(?:all_albums_\d+|list\d+|sticky2|content_page[12]|album_detail_mobile|album_related[1-4])$/.test(group);
+        return /^(?:all_albums_\d+|list\d+|sticky2|content_page[12]|album_detail_mobile|album_related[1-4]|photo_center_[1-4]|photo_bottom[1-4]|photo_RD_sticky)$/.test(group);
       }
       // 跳过注释和 script/style 文本，避免将 JS 字符串里的 <div> 当成 HTML。
       var tokens = /<!--[\s\S]*?-->|<script\b[^>]*>[\s\S]*?<\/script\s*>|<style\b[^>]*>[\s\S]*?<\/style\s*>|<\/?div\b(?:"[^"]*"|'[^']*'|[^'">])*>/gi;
@@ -77,7 +77,7 @@
         adMarkup.push(body.slice(node.start, node.end));
         var parent = node.parent;
         // 只删除完全由一个广告位占据的网格；混有正常内容的父节点保留。
-        var grid = parent && (hasClass(parent.classes, "list-col") ||
+        var grid = parent && (hasClass(parent.classes, "list-col") || hasClass(parent.classes, "photo_center_div") ||
           (hasClass(parent.classes, "col-lg-3") && hasClass(parent.classes, "col-md-3") &&
            hasClass(parent.classes, "col-sm-3") && hasClass(parent.classes, "col-xs-6")));
         if (grid && parent.end && /^\s*$/.test(body.slice(parent.openEnd, node.start)) &&
@@ -93,6 +93,7 @@
         body = body.slice(0, outer[index].start) + body.slice(outer[index].end);
       }
       var scriptsRemoved = 0;
+      var detectorRemoved = false;
       body = body.replace(/<script\b[^>]*>[\s\S]*?<\/script\s*>/gi, function (script) {
         var opening = /^<script\b[^>]*>/i.exec(script)[0];
         var src = attribute(opening, "src");
@@ -111,9 +112,17 @@
           /function\s+handleScroll\s*\(/.test(inline) && familyNames.some(function (family) {
             return inline.indexOf(family + "_RotateIt") !== -1;
           });
-        if (adSource || fallback || linkedLoader || rotator) { scriptsRemoved++; return ""; }
+        // HAR 227：独立的反广告检测会在漫画上覆盖 GIF，不属于阅读/解图脚本。
+        var antiAdblock = /^(?:(?:https?:)?\/\/(?:www\.)?(?:18comic\.vip|jmcomic-zzz\.one))?\/templates\/frontend\/airav\/js\/adblock-photo\.js(?:\?|$)/i.test(src);
+        if (antiAdblock) detectorRemoved = true;
+        if (adSource || fallback || linkedLoader || rotator || antiAdblock) { scriptsRemoved++; return ""; }
         return script;
       });
+      // 保留混有正常阅读配置的内联脚本；只为已确认的遮挡层提供样式后备。
+      var shield = '<style id="loon-jm-adblock-shield">.adblock-gif-overlay-root,.adblock-gif-slot{display:none!important}</style>';
+      if (detectorRemoved && !/\bid\s*=\s*["']loon-jm-adblock-shield["']/i.test(body)) {
+        body = /<\/head\s*>/i.test(body) ? body.replace(/<\/head\s*>/i, shield + "</head>") : shield + body;
+      }
       if (body !== response.body) {
         result = { body: body };
         console.log("[JM广告补丁] 删除 " + outer.length + " 个广告容器及 " + scriptsRemoved + " 个广告脚本");
@@ -126,6 +135,7 @@
   }
   $done(result);
 })();
+
 
 
 
