@@ -21,4 +21,6 @@
 http-response ^https?:\/\/api\.zhihu\.com\/next-render\/?(?:\?|$) script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/zhihu_ad_patch.js,requires-body=true,timeout=10,tag=知乎回答间广告补丁,enable=true
 
 [Mitm]
-hostname = api.zhihu.com,zhstatic.zhihu.com,qh-material.taobao.com,adx-track.domob.cn,wcp.taobao.com,lftxali.fancyapi.com,rtb.julang.taobao.com
+# 常驻解密：覆盖现有脚本/复写主机，并补充 HAR 230 中的 sugar 广告相关请求。
+# sugar 目前仅补充解密范围；单独解密不等于拒绝广告请求。
+hostname = sugar.zhihu.com,api.zhihu.com,zhstatic.zhihu.com,qh-material.taobao.com,adx-track.domob.cn,wcp.taobao.com,lftxali.fancyapi.com,rtb.julang.taobao.com

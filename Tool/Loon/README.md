@@ -8,9 +8,19 @@
 
 在 Loon 的插件页面更新该订阅，开启脚本、复写和 MitM，安装并信任 MitM 证书。插件会添加以下 HTTPS 解密主机：
 
-`api.zhihu.com`、`zhstatic.zhihu.com`、`qh-material.taobao.com`、`adx-track.domob.cn`、`wcp.taobao.com`、`lftxali.fancyapi.com`、`rtb.julang.taobao.com`。
+`sugar.zhihu.com`、`api.zhihu.com`、`zhstatic.zhihu.com`、`qh-material.taobao.com`、`adx-track.domob.cn`、`wcp.taobao.com`、`lftxali.fancyapi.com`、`rtb.julang.taobao.com`。
 
 更新后彻底退出知乎并重新打开，再刷新原回答。已缓存的广告不会因为规则更新而立即从页面消失。
+
+## 2026-10-18：补充常驻 MitM 域名
+
+根据 HAR 230，补充 `sugar.zhihu.com`，对应抓包中的 12 条 `/plutus_adreaper` 广告相关请求。此前插件已有的 7 个主机已经完整覆盖现有脚本和 URL 复写规则，没有发现这些规则本身缺少解密主机。
+
+本次仅扩充 MitM 范围，脚本、复写规则、插件名称及图标均保留。`sugar.zhihu.com` 暂未新增拒绝规则，单独解密并不等于拦截广告。没有把正常知乎图片 CDN、视频、登录、推送、DNS 或所有第三方广告曝光主机统一纳入解密。
+
+已检查全部现有规则主机都在解密列表内、原列表无删除/重复，且新主机在抓包中实际出现。用户已反馈广告处理有效，本次不调整过滤逻辑；关闭抓包后是否保持同样效果仍需手机验证。
+
+更新同一个插件后，保持 MitM、复写、脚本开启，关闭抓包并彻底退出知乎后重开测试；主配置中若对相关主机设有解密排除，也需要核对。原始 HAR、请求参数、Cookie 和个人浏览数据不上传仓库。
 
 ## 合并内容
 
