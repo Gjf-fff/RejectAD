@@ -5,6 +5,11 @@
 #!homepage = https://github.com/Gjf-fff/RejectAD/blob/main/Tool/Loon/README.md
 #!tag = 去广告,知乎
 
+[Rule]
+# 仅限制知乎核心 API 的 QUIC，促使支持回退的连接改走 TCP；HAR 233 未证明 QUIC 是根因。
+# 协议/逻辑规则需要 Loon 3.1.7+；本地放行规则可能优先于插件规则。
+AND,((DOMAIN,api.zhihu.com),(PROTOCOL,QUIC)),REJECT
+
 [Rewrite]
 # 已知的回答底部商业广告接口；来源见 README，本次 HAR 未捕获此接口。
 ^https?:\/\/api\.zhihu\.com\/commercial_api\/answer\/\d+\/bottom-v2\/?(?:\?|$) reject-dict
@@ -18,7 +23,7 @@
 ^https?:\/\/rtb\.julang\.taobao\.com\/dsp\/surge\/winNotice\/ADX_YIZHUN\/?(?:\?|$) reject-200
 
 [Script]
-http-response ^https?:\/\/api\.zhihu\.com\/next-render\/?(?:\?|$) script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/zhihu_ad_patch.js,requires-body=true,timeout=10,tag=知乎回答间广告补丁,enable=true
+http-response ^https?:\/\/api\.zhihu\.com\/next-render\/?(?:\?|$) script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/zhihu_ad_patch.js?v=1.0.1,requires-body=true,timeout=10,tag=知乎回答间广告补丁,enable=true
 
 [Mitm]
 # 常驻解密：覆盖现有脚本/复写主机，并补充 HAR 230 中的 sugar 广告相关请求。
