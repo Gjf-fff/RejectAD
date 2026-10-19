@@ -1,0 +1,30 @@
+{
+  "capture_entries": 93,
+  "response_script_matches": [
+    23,
+    27,
+    37,
+    42,
+    45,
+    54,
+    57,
+    78
+  ],
+  "captured_Protobuf_responses_changed": [],
+  "request_rewrite_hits": [
+    18,
+    21
+  ],
+  "normal_googlevideo_connections_preserved": 6,
+  "captured_player_ad_fields_present": false,
+  "synthetic_player_ad_slots_removed": true,
+  "synthetic_feed_ad_cards_removed": true,
+  "unknown_fields_and_noncanonical_varints_preserved": true,
+  "normal_cards_Shorts_captions_streaming_fields_preserved": true,
+  "root_777_templates_preserved": true,
+  "malformed_message_fail_open": true,
+  "method_status_type_host_path_boundaries": "passed",
+  "repeat_execution": "passed",
+  "device_test": false,
+  "checks": "passed"
+}

@@ -1,0 +1,21 @@
+#!name = 广告过滤器
+#!desc = YouTube App 已知播放器广告槽及推荐广告卡片过滤。需脚本、复写、MitM 和证书信任；与同类 YouTube 响应脚本择一启用，尚需手机验证。
+#!author = Gjf-fff
+#!icon = https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/Icon/AdFilter.png
+#!homepage = https://github.com/Gjf-fff/RejectAD/blob/main/Tool/Loon/README_AdFilter.md
+#!tag = 去广告,YouTube
+
+[Rule]
+# 仅限制需要解密的核心 API 的 QUIC，保留普通视频 CDN 连接。
+AND,((DOMAIN,youtubei.googleapis.com),(PROTOCOL,QUIC)),REJECT
+
+[Rewrite]
+# 抓包确认的广告图片路径和广告展示通知，不封锁整个 Google 图片或视频 CDN。
+^https?:\/\/tpc\.googlesyndication\.com\/simgad\/ reject-img
+^https?:\/\/www\.youtube\.com\/pagead\/adview(?:\?|$) reject-200
+
+[Script]
+http-response ^https:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/(browse|next|player)(?:\?|$) script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/youtube_ad_filter.js?v=1.0.0,requires-body=true,binary-body-mode=true,timeout=15,tag=YouTube广告过滤器,enable=true
+
+[Mitm]
+hostname = youtubei.googleapis.com,tpc.googlesyndication.com,www.youtube.com
