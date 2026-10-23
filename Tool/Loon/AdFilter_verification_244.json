@@ -1,0 +1,28 @@
+{
+  "capture_entries": 40,
+  "response_script_matches": [
+    9,
+    14,
+    15,
+    18,
+    28
+  ],
+  "ad_card_responses_changed": [
+    9,
+    14,
+    28
+  ],
+  "ad_cards_removed": 3,
+  "other_responses_preserved": 37,
+  "retained_card_and_unknown_field_bytes": "matched independent oracle",
+  "root_777_templates_preserved": true,
+  "player_response_preserved": true,
+  "normal_googlevideo_connections_preserved": 2,
+  "specific_badge_paths_and_exact_labels_only": true,
+  "unknown_renderer_and_ad_topic_text_preserved": true,
+  "malformed_message_fail_open": true,
+  "idempotence": "passed",
+  "previous_HAR_238_and_synthetic_regressions": "passed",
+  "device_test": false,
+  "checks": "passed"
+}

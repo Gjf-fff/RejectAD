@@ -20,6 +20,16 @@
 
 本插件不包含字幕翻译、后台播放、画中画或第三方播放代理。它不解密或重建加密的 Onesie/SABR 流，不保证覆盖服务器插入广告、所有 Shorts 广告或未来协议变更。
 
+## HAR 244：补充新版赞助商卡片字段（2026-10-23 / 1.0.1）
+
+本次抓包共 40 条请求，包含 4 份 browse 和 1 份 player 响应。其中 3 份 browse 各有 1 张明确标为“赞助商广告”的卡片，旧版 1.0.0 在这 3 份响应中均未识别到广告。
+
+新路径位于原有卡片内容前缀之后：`461080918 → 55 → 7 → 8 → 1`、`491441836 → 19 → 8 → 8 → 1`。只在这些明确的徽标位置匹配完整 UTF-8 广告标识（简/繁中文“赞助商广告”“广告”、英文 Sponsored/Ad/Ads），再移除所在卡片。不会按正文中出现“广告”、整类图片布局或所有未知字段删除内容。
+
+回放实际移除 3 张广告卡片；其他 37 条响应保留。独立解析器生成预期结果并逐字节比对，确认其余卡片、未知字段、分页相关数据及根字段 777 模板保留。播放器响应和 2 次 Google 视频 CDN 初始化连接保留。旧 HAR 238、原有播放器/推荐卡片构造用例、异常数据回退、普通内容及未知渲染器、重复执行检查通过。结果见 [AdFilter_verification_244.json](AdFilter_verification_244.json)。
+
+本次更新脚本及下载参数至 `1.0.1`，图标与订阅地址保留。抓包仍出现 `init-stream.maasea.workers.dev` 请求且返回 404，说明有其他播放处理链；这不能证明其为广告根因。测试本插件时，请停用其他匹配 YouTube browse/next/player 的响应脚本，更新插件后彻底退出 YouTube 再打开。离线验证证明这 3 张卡片可被移除，手机显示效果及其他广告类型仍需实际验证。本次 player 没有旧版可识别的 7/68 广告槽，不能据此承诺贴片广告效果。原始 HAR、请求令牌、签名 URL、观看记录和完整响应不上传仓库。
+
 ## HAR 238 的验证与限制
 
 抓包共 93 条记录，其中 8 条命中响应脚本范围（6 条 browse、2 条 player）。这 8 条响应没有出现本插件能够明确识别的广告槽/卡片，因此都保留原字节；其余 85 条响应也不改写。两条请求命中广告图/展示通知规则；广告图原本已返回 404。
@@ -28,7 +38,7 @@
 
 结果：[AdFilter_verification_238.json](AdFilter_verification_238.json)。尚未在真实 iPhone 验证播放和广告消失效果。抓包中的账号、令牌、签名播放地址、观看数据、完整响应及原始 HAR 不上传仓库。
 
-日志前缀为 `[广告过滤器 1.0.0]`。若仍有广告，请记录广告位置和对应脚本日志，再抓取广告出现前的 player/browse 响应。
+日志前缀为 `[广告过滤器 1.0.1]`。若仍有广告，请记录广告位置和对应脚本日志，再抓取广告出现前的 player/browse 响应。
 
 ## 文件和图标
 
@@ -43,4 +53,5 @@
 字段路径核对自 [app2smile/rules](https://github.com/app2smile/rules/blob/master/js/youtube.js)（MIT）及 [Maasea/sgmodule](https://github.com/Maasea/sgmodule/blob/master/Script/Youtube/youtube.response.js)（Apache-2.0）的公开消息定义。本仓库使用独立实现的字节保留解析器，不复制上游完整功能包或它们的远程请求流程。
 
 Loon 官方文档：[二进制脚本 API](https://nsloon.app/docs/Script/script_api/)、[脚本旧版配置](https://nsloon.app/docs/Script/)、[协议规则](https://nsloon.app/docs/Rule/protocol_rule/)。
+
 

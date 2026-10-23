@@ -1,5 +1,5 @@
 /* 广告过滤器 / Loon YouTube Protobuf response filter
- * Version 1.0.0 (2026-10-19). No network, credentials or persistent storage.
+ * Version 1.0.1 (2026-10-23). No network, credentials or persistent storage.
  * Wire schemas cross-checked against app2smile/rules (MIT) and
  * Maasea/sgmodule (Apache-2.0); independently implemented wire preservation.
  * Only known ad fields/cards are removed. Unknown fields stay byte-identical.
@@ -84,9 +84,22 @@
       [224590612,2,9], [394770629,8,4,2], [491441836,8,4,2],
       [232954548,19,3], [456430508,7,4,2]
     ];
+    // HAR 244: new sponsored badge locations, checked as exact UTF-8 labels.
+    var sponsoredPaths = [[461080918,55,7,8,1], [491441836,19,8,8,1]];
+    var sponsoredLabels = [[232,181,158,229,138,169,229,149,134,229,185,191,229,145,138],[232,180,138,229,138,169,229,149,134,229,187,163,229,145,138],[229,185,191,229,145,138],[229,187,163,229,145,138],[83,112,111,110,115,111,114,101,100],[65,100],[65,100,115]];
+    function isSponsoredLabel(value) {
+      return sponsoredLabels.some(function (label) {
+        if (value.length !== label.length) return false;
+        for (var k = 0; k < label.length; k++) if (value[k] !== label[k]) return false;
+        return true;
+      });
+    }
     function isAdCard(data) {
       var contents = pathValues(data, contentPrefix);
       for (var i = 0; i < contents.length; i++) {
+        for (var p = 0; p < sponsoredPaths.length; p++) {
+          if (pathValues(contents[i], sponsoredPaths[p]).some(isSponsoredLabel)) return true;
+        }
         for (var j = 0; j < adLabels.length; j++) {
           if (pathValues(contents[i], adLabels[j]).some(function (value) { return value.length > 0; })) return true;
         }
@@ -130,9 +143,10 @@
     }
     var filtered = transform(bytes, match[1].toLowerCase(), 0);
     if (filtered !== bytes) result = { body: filtered };
-    console.log("[广告过滤器 1.0.0] " + match[1] + " 移除 " + removed + " 个已知广告槽/卡片");
+    console.log("[广告过滤器 1.0.1] " + match[1] + " 移除 " + removed + " 个已知广告槽/卡片");
   } catch (error) {
-    console.log("[广告过滤器 1.0.0] 无法安全解析，保留原响应");
+    console.log("[广告过滤器 1.0.1] 无法安全解析，保留原响应");
   }
   $done(result);
 })();
+
