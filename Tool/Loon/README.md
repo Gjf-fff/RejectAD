@@ -8,9 +8,24 @@
 
 在 Loon 的插件页面更新该订阅，开启脚本、复写和 MitM，安装并信任 MitM 证书。插件会添加以下 HTTPS 解密主机：
 
-`sugar.zhihu.com`、`api.zhihu.com`、`zhstatic.zhihu.com`、`qh-material.taobao.com`、`adx-track.domob.cn`、`wcp.taobao.com`、`lftxali.fancyapi.com`、`rtb.julang.taobao.com`。
+`lens.zhihu.com`、`*.vzuu.com`、`sugar.zhihu.com`、`api.zhihu.com`、`zhstatic.zhihu.com`、`qh-material.taobao.com`、`adx-track.domob.cn`、`wcp.taobao.com`、`lftxali.fancyapi.com`、`rtb.julang.taobao.com`。
 
 更新后彻底退出知乎并重新打开，再刷新原回答。已缓存的广告不会因为规则更新而立即从页面消失。
+
+## HAR 243：广告视频及备用播放源修复（2026-10-23 / 1.0.2）
+
+本次抓包为知乎，共 144 条请求。6 次成功的 206 视频请求使用 `vdn3.vzuu.com/HD/ad_bidding/` 或 `/HD/ad_bidding_ob/` 广告素材目录；3 份 `lens.zhihu.com/api/v4/videos/<数字ID>` 响应返回这些广告的播放列表，其中 2 份还返回不带广告目录的 `playlist_v2` 备用编码。旧规则没有覆盖这两个入口。
+
+本次合并两项处理：
+
+- 仅拒绝 `vdn<数字>.vzuu.com` 主机下 `ad_bidding`、`ad_bidding_ob` 完整目录的视频请求，不按整个视频域名拒绝。
+- 对 `lens.zhihu.com/api/v4/videos/<数字ID>` 的成功 JSON 响应，仅当 `playlist` 或 `playlist_v2` 的 `play_url` 明确命中上述广告目录时，清空同一视频的两套播放列表。备用编码可能没有广告路径，但仍属于同一条已确认的广告视频。封面、标题及其他字段保留；未命中广告目录的视频保留原响应。
+
+新增常驻解密 `lens.zhihu.com`、`*.vzuu.com`，分别用于播放源响应处理和媒体 URL 路径复写。通配解密覆盖视频 CDN 的主机变化，并不表示拒绝全部视频。其他现有规则、图标和订阅地址保留，脚本版本及下载参数更新至 `1.0.2`。
+
+离线回放结果：3 份广告视频响应清空主/备用播放源，6 次广告视频请求匹配新增拒绝规则；2 次普通视频请求和 9 份正常/付费回答响应保留。旧 HAR 230 的 3 份回答广告卡片过滤结果保留，并额外识别 1 份同类广告视频；HAR 233 的响应仍全部保留。普通视频、域名/路径边界、异常 JSON、失败状态和重复执行检查通过。结果见 [Zhihu_verification_243.json](Zhihu_verification_243.json)。
+
+更新同一插件后，确认 MitM 证书已安装并信任，彻底退出知乎再打开；若仍播放旧广告，可清理知乎缓存后重试。新日志包含 `[知乎广告补丁 1.0.2] /api/v4/videos 清空已确认广告视频的主/备用播放源`。本次抓包没有 `/next-render` 或开屏广告下发响应，不能据此确认所有广告卡片或开屏广告已消失；已缓存素材和页面占位仍需手机验证。原始 HAR、签名播放地址、视频数据、回答正文和个人标识不上传仓库。
 
 ## HAR 233：关闭抓包后广告恢复的传输排查（2026-10-18）
 
@@ -48,7 +63,7 @@ AND,((DOMAIN,api.zhihu.com),(PROTOCOL,QUIC)),REJECT
 
 ### 1. 保留原来的回答间广告过滤
 
-`Tool/Loon/JS/zhihu_ad_patch.js` 保持原样，仍只在 `api.zhihu.com/next-render` 成功 JSON 响应中移除 `data[].type === "ad"` 的独立广告项，保留其他内容及原始 `paging`。
+回答间卡片过滤保留：在 `api.zhihu.com/next-render` 成功 JSON 响应中移除 `data[].type === "ad"` 的独立广告项，保留其他内容及原始 `paging`。
 
 不会根据正文中的品牌、广告关键词或 `ad_info` 删除正常回答。日志沿用“[知乎广告补丁] /next-render 删除 … 张广告卡片”。
 
@@ -101,7 +116,8 @@ Loon 同一响应最多执行一个响应脚本；命中响应体 Rewrite 时，
 ## 文件
 
 - `Tool/Loon/Plugin/Zhihu.plugin`：合并插件。
-- `Tool/Loon/JS/zhihu_ad_patch.js`：原回答间卡片过滤脚本。
+- `Tool/Loon/JS/zhihu_ad_patch.js`：回答间卡片及广告视频播放源过滤脚本。
 - 知乎图标仍使用 [fmz200/wool_scripts 的图标](https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/zhihu.png)。
 
 脚本无需 Cookie、联网请求、持久化存储或定时任务。
+

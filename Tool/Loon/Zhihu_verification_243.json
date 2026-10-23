@@ -1,0 +1,40 @@
+{
+  "capture_entries": 144,
+  "ad_video_responses_cleaned": [
+    8,
+    16,
+    96
+  ],
+  "ad_video_requests_blocked": [
+    0,
+    3,
+    6,
+    11,
+    89,
+    90
+  ],
+  "ordinary_video_requests_preserved": [
+    92,
+    112
+  ],
+  "normal_answer_responses_preserved": 9,
+  "backup_playlists_cleared": true,
+  "other_response_fields_preserved": true,
+  "normal_video_and_boundaries": "passed",
+  "invalid_json_fail_open": true,
+  "idempotence": "passed",
+  "regressions": {
+    "230": {
+      "entries": 232,
+      "card_responses_changed": 3,
+      "ad_video_responses_cleaned": 1
+    },
+    "233": {
+      "entries": 184,
+      "card_responses_changed": 0,
+      "ad_video_responses_cleaned": 0
+    }
+  },
+  "device_test": false,
+  "checks": "passed"
+}

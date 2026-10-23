@@ -1,5 +1,5 @@
 #!name = 知乎回答页广告补丁
-#!desc = 合并回答间独立广告卡片过滤、回答底部商业广告入口拦截及抓包确认的广告素材/曝光请求拦截。需要脚本、复写和 MitM；已缓存广告可能保留占位，详见说明。
+#!desc = 合并回答间独立广告卡片过滤、广告视频主/备用播放源清理及广告素材/曝光拦截。需要脚本、复写和 MitM；已缓存广告可能保留占位，详见说明。
 #!author = Gjf-fff
 #!icon = https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/zhihu.png
 #!homepage = https://github.com/Gjf-fff/RejectAD/blob/main/Tool/Loon/README.md
@@ -11,6 +11,8 @@
 AND,((DOMAIN,api.zhihu.com),(PROTOCOL,QUIC)),REJECT
 
 [Rewrite]
+# HAR 243 确认的广告视频目录；保留普通 vzuu 视频路径。
+^https?:\/\/vdn\d+\.vzuu\.com\/(?:[^/?#]+\/)?ad_bidding(?:_ob)?\/ reject
 # 已知的回答底部商业广告接口；来源见 README，本次 HAR 未捕获此接口。
 ^https?:\/\/api\.zhihu\.com\/commercial_api\/answer\/\d+\/bottom-v2\/?(?:\?|$) reject-dict
 # 本次 HAR 确认的知乎品牌广告资源及广告图片；不拦截正常 zhimg 图片。
@@ -23,9 +25,11 @@ AND,((DOMAIN,api.zhihu.com),(PROTOCOL,QUIC)),REJECT
 ^https?:\/\/rtb\.julang\.taobao\.com\/dsp\/surge\/winNotice\/ADX_YIZHUN\/?(?:\?|$) reject-200
 
 [Script]
-http-response ^https?:\/\/api\.zhihu\.com\/next-render\/?(?:\?|$) script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/zhihu_ad_patch.js?v=1.0.1,requires-body=true,timeout=10,tag=知乎回答间广告补丁,enable=true
+http-response ^https?:\/\/api\.zhihu\.com\/next-render\/?(?:\?|$) script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/zhihu_ad_patch.js?v=1.0.2,requires-body=true,timeout=10,tag=知乎回答间广告补丁,enable=true
+http-response ^https?:\/\/lens\.zhihu\.com\/api\/v4\/videos\/\d+\/?(?:\?|$) script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/zhihu_ad_patch.js?v=1.0.2,requires-body=true,timeout=10,tag=知乎广告视频播放源补丁,enable=true
 
 [Mitm]
 # 常驻解密：覆盖现有脚本/复写主机，并补充 HAR 230 中的 sugar 广告相关请求。
 # sugar 目前仅补充解密范围；单独解密不等于拒绝广告请求。
-hostname = sugar.zhihu.com,api.zhihu.com,zhstatic.zhihu.com,qh-material.taobao.com,adx-track.domob.cn,wcp.taobao.com,lftxali.fancyapi.com,rtb.julang.taobao.com
+hostname = lens.zhihu.com,*.vzuu.com,sugar.zhihu.com,api.zhihu.com,zhstatic.zhihu.com,qh-material.taobao.com,adx-track.domob.cn,wcp.taobao.com,lftxali.fancyapi.com,rtb.julang.taobao.com
+
