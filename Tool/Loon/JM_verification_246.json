@@ -1,0 +1,27 @@
+{
+  "har": 246,
+  "entries": 436,
+  "script_version": "1.0.2 (unchanged)",
+  "rewrite_requests_matched": 24,
+  "rewrite_paths": {
+    "/commercial_api/banners_v3/app_float_corner": 2,
+    "/commercial_api/answer/:id/bottom-v2": 1,
+    "/ad-track/zplus_log": 13,
+    "/plutus_adreaper/page_monitor_log": 2,
+    "/commercial_api/article/:id/bottom-v2": 1,
+    "/plutus_adreaper/ad_adx_log": 2,
+    "/ad-track/dream_third": 1,
+    "/plutus_adreaper": 1,
+    "/commercial_api/launch_v2": 1
+  },
+  "script_requests_matched": 6,
+  "script_responses_changed": 0,
+  "normal_answers_preserved": 21,
+  "original_web_rules_and_mitm_preserved": true,
+  "synthetic_ad_card_and_video_checks": "passed",
+  "normal_content_and_path_boundaries": "passed",
+  "invalid_json_and_error_status_fail_open": true,
+  "device_test": false,
+  "limitations": "Capture already contains filtered responses; no original ad cards or nonempty Lens playlists were present.",
+  "checks": "passed"
+}

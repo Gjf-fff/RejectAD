@@ -1,5 +1,5 @@
 #!name = 我不是涩神
-#!desc = 合并 JM、小说网页去广告，MissAV 已知广告防弹窗及 51CG 播放前贴片处理。需要复写、脚本和 MitM，重新打开原网页后生效；部分处理尚需手机验证。
+#!desc = 去除一些学习资料的广告
 #!author = Gjf-fff
 #!icon = https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/Icon/JM-avatar.png
 #!homepage = https://github.com/Gjf-fff/RejectAD/blob/main/Tool/Loon/README_JM.md
@@ -19,6 +19,11 @@ DOMAIN,z6v2p9a8.bkcdn.net,REJECT
 DOMAIN,sc.ec424.com,REJECT
 DOMAIN,ads.exoclick.com,REJECT
 
+# 知乎广告模块（HAR 246 合并）
+# 仅限制知乎核心 API 的 QUIC，促使支持回退的连接改走 TCP；HAR 233 未证明 QUIC 是根因。
+# 协议/逻辑规则需要 Loon 3.1.7+；本地放行规则可能优先于插件规则。
+AND,((DOMAIN,api.zhihu.com),(PROTOCOL,QUIC)),REJECT
+
 [Rewrite]
 # HAR 208：仅处理确认的广告文件；正常封面、勋章、视频及其他 jquery 文件不匹配。
 ^https?:\/\/(?:www\.)?(?:18comic\.vip|jmcomic-zzz\.one)\/templates\/frontend\/airav\/js\/jquery\.7_2dc\.js(?:\?|$) reject-200
@@ -36,6 +41,24 @@ DOMAIN,ads.exoclick.com,REJECT
 ^https?:\/\/(?:www\.)?(?:18comic\.vip|jmcomic-zzz\.one)\/templates\/frontend\/airav\/js\/adblock-photo\.js(?:\?|$) reject-200
 ^https?:\/\/cdn-msp3\.18comic\.vip\/media\/adblock\/20250107_jm_500500_tw\.gif(?:\?|$) reject-img
 
+# 知乎广告模块（HAR 246 合并）
+# HAR 243 确认的广告视频目录；保留普通 vzuu 视频路径。
+^https?:\/\/vdn\d+\.vzuu\.com\/(?:[^/?#]+\/)?ad_bidding(?:_ob)?\/ reject
+# HAR 246：回答/文章底部商业广告接口。
+^https?:\/\/api\.zhihu\.com\/commercial_api\/(?:answer|article)\/\d+\/bottom-v2\/?(?:\?|$) reject-dict
+# 沿用独立知乎插件中 HAR 243 的品牌广告资源/图片规则。
+^https?:\/\/zhstatic\.zhihu\.com\/brand-ad\/image\/ reject
+^https?:\/\/qh-material\.taobao\.com\/auto\/aigc\/pic\/AI_FLOW_PIC_[^/?]+\.(?:jpg|jpeg|png|webp)(?:\?|$) reject-img
+# 沿用 HAR 243 的曝光/竞价规则；拦截通知本身不等于移除广告卡片。
+^https?:\/\/adx-track\.domob\.cn\/imp\/?(?:\?|$) reject-200
+^https?:\/\/wcp\.taobao\.com\/adstrack\/track\.json(?:\?|$) reject-200
+^https?:\/\/lftxali\.fancyapi\.com\/win\/?(?:\?|$) reject-200
+^https?:\/\/rtb\.julang\.taobao\.com\/dsp\/surge\/winNotice\/ADX_YIZHUN\/?(?:\?|$) reject-200
+
+# HAR 246：精确匹配开屏、角标及知乎广告曝光接口。
+^https?:\/\/api\.zhihu\.com\/commercial_api\/(?:launch_v2|banners_v3\/app_float_corner)\/?(?:\?|$) reject-dict
+^https?:\/\/sugar\.zhihu\.com\/(?:ad-track\/(?:zplus_log|dream_third)|plutus_adreaper(?:\/(?:page_monitor_log|ad_adx_log))?)\/?(?:\?|$) reject-200
+
 [Script]
 http-response ^https?:\/\/(?:www\.)?(?:18comic\.vip|jmcomic-zzz\.one)\/ script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/jm_web_ad_patch.js?v=1.1.4,requires-body=true,timeout=10,tag=JM网页广告补丁,enable=true
 
@@ -50,9 +73,9 @@ http-response ^https?:\/\/[a-z0-9.-]*banzhu[a-z0-9.-]*(?::\d+)?\/ script-path=ht
 # 仅当 Referer/Origin 为小说站时，由脚本取消已确认的推广导航。
 http-request ^https?:\/\/(?:www\.(?:pm1256tiger|hm1614t|hm1619t)\.vip:9527\/?(?:\?|$)|2\.s5825hu\.cc:8888\/?(?:\?|$)|1214gc\.x2062ys\.com:8005\/(?:cc|d)\/3876(?:\?|$)|www\.c4jsrnirobpg\.vip:20110\/news\/decide-obscure\.html(?:\?|$)) script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/novel_web_ad_patch.js?v=1.3.0,timeout=10,tag=小说推广导航拦截,enable=true
 
+# 知乎广告模块（HAR 246 合并）
+http-response ^https?:\/\/api\.zhihu\.com\/next-render\/?(?:\?|$) script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/zhihu_ad_patch.js?v=1.0.2,requires-body=true,timeout=10,tag=知乎回答间广告补丁,enable=true
+http-response ^https?:\/\/lens\.zhihu\.com\/api\/v4\/videos\/\d+\/?(?:\?|$) script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/zhihu_ad_patch.js?v=1.0.2,requires-body=true,timeout=10,tag=知乎广告视频播放源补丁,enable=true
+
 [Mitm]
-hostname = cdn-msp3.18comic.vip,18comic.vip,www.18comic.vip,jmcomic-zzz.one,www.jmcomic-zzz.one,cdn-msp2.jmcomic-zzz.one,missav.ai,www.missav.ai,51cg1.com,www.51cg1.com,*banzhu*,g.yfrwa.cn,www.dell.com,a.magsrv.com,www.pm1256tiger.vip,www.hm1614t.vip,www.c4jsrnirobpg.vip,www.hm1619t.vip,2.s5825hu.cc,1214gc.x2062ys.com,www.plpyvxfgxbz6nuhh.app
-
-
-
-
+hostname = cdn-msp3.18comic.vip,18comic.vip,www.18comic.vip,jmcomic-zzz.one,www.jmcomic-zzz.one,cdn-msp2.jmcomic-zzz.one,missav.ai,www.missav.ai,51cg1.com,www.51cg1.com,*banzhu*,g.yfrwa.cn,www.dell.com,a.magsrv.com,www.pm1256tiger.vip,www.hm1614t.vip,www.c4jsrnirobpg.vip,www.hm1619t.vip,2.s5825hu.cc,1214gc.x2062ys.com,www.plpyvxfgxbz6nuhh.app,lens.zhihu.com,*.vzuu.com,sugar.zhihu.com,api.zhihu.com,zhstatic.zhihu.com,qh-material.taobao.com,adx-track.domob.cn,wcp.taobao.com,lftxali.fancyapi.com,rtb.julang.taobao.com
