@@ -3,7 +3,7 @@
 #!author = Gjf-fff
 #!homepage = https://github.com/Gjf-fff/RejectAD
 #!tag = DNS,DoH,加密解析
-#!version = 1.4.0
+#!version = 1.5.0
 
 [Host]
 
@@ -121,4 +121,13 @@
 *.bdstatic.com = server:180.76.76.76
 *.bcebos.com = server:180.76.76.76
 
+# Cisco / OpenDNS | Cisco 旗下公共递归 DNS（普通 DNS）
+*.cisco.com = server:208.67.222.222
+*.cisco.net = server:208.67.222.222
+*.opendns.com = server:208.67.222.222
+*.umbrella.com = server:208.67.222.222
+*.umbrella.cisco.com = server:208.67.222.222
+
+# Microsoft、Apple、Amazon、Meta、Netflix 等没有可确认的自有公共递归 DNS：
+# 不添加规则，由默认 DNS 解析。
 # 未匹配域名不做映射，交由 Loon 主配置或系统 DNS 解析。
