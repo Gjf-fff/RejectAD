@@ -192,5 +192,11 @@ kuwo.cn = server:https://1.12.12.12/dns-query
 y.qq.com = server:https://1.12.12.12/dns-query
 *.y.qq.com = server:https://1.12.12.12/dns-query
 
+# Quad9 | 官方确认支持 IP 形式 DoH
+quad9.net = server:https://9.9.9.9/dns-query
+*.quad9.net = server:https://9.9.9.9/dns-query
+quad9.org = server:https://9.9.9.9/dns-query
+*.quad9.org = server:https://9.9.9.9/dns-query
+
 # 未匹配域名继续使用 Loon 主配置的 DNS。
 # IP 形式的 HTTPS DoH 依赖服务端证书包含对应 IP SAN。
