@@ -3,7 +3,7 @@
 #!author = Gjf-fff
 #!homepage = https://github.com/Gjf-fff/RejectAD
 #!tag = DNS,DoH,加密解析
-#!version = 1.3.0
+#!version = 1.4.0
 
 [Host]
 
@@ -107,5 +107,18 @@
 # Quad9 | 官方确认支持 IP 形式 DoH
 *.quad9.net = server:https://9.9.9.9/dns-query
 *.quad9.org = server:https://9.9.9.9/dns-query
+
+# AdGuard | 自家普通 DNS（IP DoH 未确认）
+*.adguard.com = server:94.140.14.14
+*.adguard-dns.com = server:94.140.14.14
+
+# 360 | 自家普通 DNS
+*.360.cn = server:101.226.4.6
+*.so.com = server:101.226.4.6
+
+# 百度 | 自家普通 DNS
+*.baidu.com = server:180.76.76.76
+*.bdstatic.com = server:180.76.76.76
+*.bcebos.com = server:180.76.76.76
 
 # 未匹配域名不做映射，交由 Loon 主配置或系统 DNS 解析。
