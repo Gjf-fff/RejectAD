@@ -3,6 +3,7 @@
 #!author = Gjf-fff
 #!homepage = https://github.com/Gjf-fff/RejectAD
 #!tag = DNS,DoH,加密解析
+#!version = 1.2.0
 
 [Host]
 
@@ -117,6 +118,67 @@
 *.baidu.com = server:180.76.76.76
 *.bdstatic.com = server:180.76.76.76
 *.bcebos.com = server:180.76.76.76
+
+
+# 华为 | 普通 DNS（非该厂商自有解析器，仅作分组回退）
+*.huawei.com = server:119.29.29.29
+*.hicloud.com = server:119.29.29.29
+*.huaweicloud.com = server:119.29.29.29
+*.huaweicloud.cn = server:119.29.29.29
+*.harmonyos.com = server:119.29.29.29
+*.vmall.com = server:119.29.29.29
+
+# 字节跳动 | 普通 DNS（非该厂商自有解析器，仅作分组回退）
+*.bytedance.com = server:180.76.76.76
+*.byteimg.com = server:180.76.76.76
+*.bytecdn.cn = server:180.76.76.76
+*.douyin.com = server:180.76.76.76
+*.douyincdn.com = server:180.76.76.76
+*.douyinpic.com = server:180.76.76.76
+*.toutiao.com = server:180.76.76.76
+*.toutiaoimg.com = server:180.76.76.76
+*.ixigua.com = server:180.76.76.76
+*.snssdk.com = server:180.76.76.76
+*.volcengine.com = server:180.76.76.76
+
+# 京东 | 普通 DNS（非该厂商自有解析器，仅作分组回退）
+*.jd.com = server:119.29.29.29
+*.jd.cn = server:119.29.29.29
+*.360buy.com = server:119.29.29.29
+*.jcloud.com = server:119.29.29.29
+*.jdcloud.com = server:119.29.29.29
+*.3.cn = server:119.29.29.29
+
+# 网易 | 普通 DNS（非该厂商自有解析器，仅作分组回退）
+*.163.com = server:119.29.29.29
+*.126.com = server:119.29.29.29
+*.netease.com = server:119.29.29.29
+*.netease.im = server:119.29.29.29
+*.music.163.com = server:119.29.29.29
+*.163yun.com = server:119.29.29.29
+
+# 小米 | 普通 DNS（非该厂商自有解析器，仅作分组回退）
+*.mi.com = server:119.29.29.29
+*.mi.cn = server:119.29.29.29
+*.xiaomi.com = server:119.29.29.29
+*.xiaomi.net = server:119.29.29.29
+*.miui.com = server:119.29.29.29
+*.mijia.tech = server:119.29.29.29
+
+# 哔哩哔哩 | 普通 DNS（非该厂商自有解析器，仅作分组回退）
+*.bilibili.com = server:119.29.29.29
+*.bilibili.tv = server:119.29.29.29
+*.biliapi.com = server:119.29.29.29
+*.bilivideo.com = server:119.29.29.29
+*.hdslb.com = server:119.29.29.29
+*.biligame.com = server:119.29.29.29
+
+# 苹果 | 普通 DNS（非该厂商自有解析器，仅作分组回退）
+*.apple.com = server:119.29.29.29
+*.icloud.com = server:119.29.29.29
+*.icloud-content.com = server:119.29.29.29
+*.mzstatic.com = server:119.29.29.29
+*.apple-dns.net = server:119.29.29.29
 
 # 未匹配域名继续使用 Loon 主配置的 DNS。
 # IP 形式的 HTTPS DoH 依赖服务端证书包含对应 IP SAN；其他厂商使用普通 DNS。
