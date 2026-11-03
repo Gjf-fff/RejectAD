@@ -3,7 +3,7 @@
 #!author = Gjf-fff
 #!homepage = https://github.com/Gjf-fff/RejectAD
 #!tag = DNS,DoH,加密解析
-#!version = 1.5.0
+#!version = 1.6.0
 
 [Host]
 
@@ -128,6 +128,14 @@
 *.umbrella.com = server:208.67.222.222
 *.umbrella.cisco.com = server:208.67.222.222
 
-# Microsoft、Apple、Amazon、Meta、Netflix 等没有可确认的自有公共递归 DNS：
-# 不添加规则，由默认 DNS 解析。
+# Microsoft | 自有权威 DNS / Azure 内部递归 DNS 不适合直接作为公网 Loon 递归 DNS
+# 以下域名保持 Loon 默认解析：*.microsoft.com, *.windows.com, *.windows.net,
+# *.office.com, *.office365.com, *.live.com, *.outlook.com, *.azure.com,
+# *.azureedge.net, *.msftconnecttest.com, *.bing.com, *.xboxlive.com
+
+# Apple | 自有权威 DNS 不等于公网递归 DNS
+# 以下域名保持 Loon 默认解析：*.apple.com, *.icloud.com, *.icloud-content.com,
+# *.apple-dns.net, *.mzstatic.com, *.itunes.com, *.me.com
+
+# Amazon、Meta、Netflix 等未配置可确认的自有公共递归 DNS，保持默认解析。
 # 未匹配域名不做映射，交由 Loon 主配置或系统 DNS 解析。
