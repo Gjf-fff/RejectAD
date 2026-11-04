@@ -3,6 +3,7 @@
  * 仅发送普通网页搜索请求，不执行 Rewards 签到或保证积分。
  */
 const args = typeof $argument === 'object' && $argument !== null ? $argument : {};
+const manual = args.manual === true || String(args.manual) === 'true';
 const scheduledTime = String(args.runTime ?? '09:00').trim();
 const validTime = /^([01]\\d|2[0-3]):[0-5]\\d$/.test(scheduledTime);
 const now = new Date();
@@ -25,9 +26,9 @@ function request(url) {
 function decode(s){return s.replace(/<!\\[CDATA\\[|\\]\\]>/g,'').replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/&#39;|&apos;/g,"'").replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/<[^>]*>/g,'').trim();}
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 (async()=>{
-  if(args.taskEnabled === false || String(args.taskEnabled) === 'false') return;
-  if(!validTime){console.log('无效的执行时间，请填写 HH:mm，例如 09:00');return;}
-  if(currentTime !== scheduledTime) return;
+  if(!manual && (args.taskEnabled === false || String(args.taskEnabled) === 'false')) return;
+  if(!manual && !validTime){console.log('无效的执行时间，请填写 HH:mm，例如 09:00');return;}
+  if(!manual && currentTime !== scheduledTime) return;
   let topics=[];
   try {
     const r=await request(RSS);
