@@ -1,4 +1,5 @@
 #!name = Bing热点搜索
+#!icon = https://www.bing.com/favicon.ico
 #!desc = 直接填写每天执行时间HH:mm，设置搜索次数与间隔；非 Rewards 签到
 #!author = Gjf-fff
 #!homepage = https://github.com/Gjf-fff/RejectAD
