@@ -1,0 +1,29 @@
+#!name = Bing每日签到与热点搜索
+#!desc = 每日签到并从当天百度热搜中随机搜索30个不重复热点。运行时间可自定义。首次使用需获取网页登录Cookie与App签到授权，凭据只保存在Loon本机。搜索请求不保证计入微软积分，验证码和限流时停止。详见使用说明。
+#!author = Gjf-fff
+#!homepage = https://github.com/Gjf-fff/RejectAD/blob/main/Tool/Loon/README_Bing.md
+#!tag = Bing,定时任务
+#!loon_version = 3.5.1(983)
+#!date = 2026-11-04
+
+[Argument]
+cronExpression = input,"0 8 * * *",type=string,tag=每日执行时间,desc=按手机当前时区执行。例如每天08:00填0 8 * * *，每天20:30填30 20 * * *
+enabled = switch,true,tag=启用定时任务
+captureEnabled = switch,true,tag=获取登录凭据,desc=首次使用打开后完成网页登录和App签到。获取完毕建议关闭
+checkInEnabled = switch,true,tag=App每日签到,desc=需要Bing App签到配置。取得可续期授权后可自动刷新Token
+searchEnabled = switch,true,tag=每日热点搜索
+searchCount = input,30,type=number,tag=搜索数量,desc=每天1到30个不重复热点，同一天重跑不会重复发送已记录的请求
+intervalSeconds = input,5,type=number,tag=搜索间隔秒数,desc=固定间隔1到15秒。任务运行需要Loon保持连接
+notifications = switch,true,tag=结果通知
+
+[Script]
+request if ${captureEnabled} == true && ${url} ~= /^https:\/\/(?:www\.|cn\.)?bing\.com\/search(?:\?|$)/ then script("https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/bing_daily.js", {${captureEnabled}, ${notifications}}) with tag="Bing获取网页登录", timeout=10
+request if ${captureEnabled} == true && ${url} ~= /^https:\/\/prod\.rewardsplatform\.microsoft\.com\/dapi\/me(?:\/activities)?(?:\?|$)/ then script("https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/bing_daily.js", {${captureEnabled}, ${notifications}}) with tag="Bing获取App签到配置", requires_body=true, timeout=10
+response if ${captureEnabled} == true && ${url} ~= /^https:\/\/login\.live\.com\/oauth20_token\.srf(?:\?|$)/ then script("https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/bing_daily.js", {${captureEnabled}, ${notifications}}) with tag="Bing获取可续期授权", requires_body=true, timeout=10
+cron ${cronExpression} then script("https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/bing_daily.js", {${enabled}, ${checkInEnabled}, ${searchEnabled}, ${searchCount}, ${intervalSeconds}, ${notifications}}) with enable=${enabled}, tag="Bing每日签到与热点搜索", timeout=600
+generic then script("https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/bing_daily.js", {${checkInEnabled}, ${searchEnabled}, ${searchCount}, ${intervalSeconds}, ${notifications}}) with tag="Bing立即执行", timeout=600
+generic then script("https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/bing_daily.js", "action=status") with tag="Bing查看本地状态", timeout=10
+generic then script("https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/bing_daily.js", "action=clear") with tag="Bing清除本地登录凭据", timeout=10
+
+[Mitm]
+hostname = bing.com,www.bing.com,cn.bing.com,prod.rewardsplatform.microsoft.com,login.live.com

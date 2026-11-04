@@ -28,3 +28,9 @@ remove some ads
 - `Tool/Loon/JS/`：插件使用的脚本。
 
 原 `Tool/Loon/Rewrite/` 目录已迁移；已订阅知乎或 JM 插件的用户请改用上方的新地址。
+
+## Bing 每日签到与热点搜索
+
+- [Loon 插件订阅](https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/Plugin/Bing.plugin)：默认每日 08:00，执行时间可在插件参数修改，最多随机搜索当天 30 个不重复热点。
+- [首次授权、定时设置和使用说明](Tool/Loon/README_Bing.md)。网页搜索与 App 签到需要分别取得登录信息，可续期授权只保存在 Loon 本机。自动搜索不保证计入 Microsoft Rewards 积分。
+
