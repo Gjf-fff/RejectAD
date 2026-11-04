@@ -16,3 +16,7 @@ taskEnabled = switch,true,type=boolean,tag=启用定时任务,desc=关闭后不�
 
 [Script]
 cron "* * * * *" then script("https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/bing_hot_topics.js", {${runTime}, ${searchCount}, ${searchInterval}, ${showNotify}, ${taskEnabled}}) with enable=${taskEnabled}, timeout=3900, tag="Bing热点搜索"
+
+# 手动运行入口：在 Loon 的脚本/定时任务列表中找到「Bing热点搜索·立即执行」，点击运行。
+# 此任务的 Cron 设置为每年 1 月 1 日 00:00，仅用于提供手动执行入口。
+cron "0 0 1 1 *" then script("https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/bing_hot_topics.js", {${searchCount}, ${searchInterval}, ${showNotify}, manual=true}) with timeout=3900, tag="Bing热点搜索·立即执行"
