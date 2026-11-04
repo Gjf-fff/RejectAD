@@ -3,6 +3,10 @@
  * 仅发送普通网页搜索请求，不执行 Rewards 签到或保证积分。
  */
 const args = typeof $argument === 'object' && $argument !== null ? $argument : {};
+const scheduledTime = String(args.runTime ?? '09:00').trim();
+const validTime = /^([01]\\d|2[0-3]):[0-5]\\d$/.test(scheduledTime);
+const now = new Date();
+const currentTime = String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
 const raw = typeof $argument === 'string' ? $argument : '';
 function option(key, def, min, max) {
   const match = raw.match(new RegExp('(?:^|&)'+key+'=(\\d+)(?:&|$)'));
@@ -11,7 +15,7 @@ function option(key, def, min, max) {
 }
 const COUNT = Math.min(30, Math.max(1, Math.floor(Number(args.searchCount ?? option('count', 5, 1, 30)) || 5)));
 const INTERVAL = Math.min(120, Math.max(1, Math.floor(Number(args.searchInterval ?? option('interval', 15, 1, 120)) || 15)));
-const SHOW_NOTIFY = args.showNotify !== false;
+const SHOW_NOTIFY = args.showNotify !== false && String(args.showNotify) !== 'false';
 const RSS = 'https://www.bing.com/news/search?q=top+stories&format=rss';
 const fallback = ['人工智能最新进展','科技热点新闻','全球财经新闻','新能源汽车新闻','互联网技术趋势','今日国际新闻','软件开发新技术'];
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -21,6 +25,9 @@ function request(url) {
 function decode(s){return s.replace(/<!\\[CDATA\\[|\\]\\]>/g,'').replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/&#39;|&apos;/g,"'").replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/<[^>]*>/g,'').trim();}
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 (async()=>{
+  if(args.taskEnabled === false || String(args.taskEnabled) === 'false') return;
+  if(!validTime){console.log('无效的执行时间，请填写 HH:mm，例如 09:00');return;}
+  if(currentTime !== scheduledTime) return;
   let topics=[];
   try {
     const r=await request(RSS);
