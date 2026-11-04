@@ -1,0 +1,8 @@
+#!name = Bing热点搜索
+#!desc = 定时获取 Bing 热点并随机发起 5 次普通搜索请求；非 Microsoft Rewards 自动签到
+#!author = Gjf-fff
+#!homepage = https://github.com/Gjf-fff/RejectAD
+#!tag = Bing,热点,定时任务
+
+[Script]
+cron "0 9 * * *" script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/bing_hot_topics.js,tag=Bing热点搜索,timeout=120
