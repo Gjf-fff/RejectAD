@@ -1,12 +1,17 @@
 #!name = Bing热点搜索
-#!desc = 自定义运行时间、搜索次数与间隔；普通 Bing 热点搜索，非 Rewards 签到
+#!desc = 插件内自定义执行时间、搜索数量、间隔和通知；普通 Bing 搜索，非 Rewards 签到
 #!author = Gjf-fff
 #!homepage = https://github.com/Gjf-fff/RejectAD
 #!tag = Bing,热点,定时任务
-#!version = 1.1.0
+#!loon_version = 3.5.1(983)
+#!date = 2026-11-04
+
+[Argument]
+runTime = input,"0 9 * * *",type=string,tag=定时执行时间,desc=Cron表达式；默认每天09:00；每天20:30填写30 20 * * *
+searchCount = input,5,type=number,tag=搜索次数,desc=每次执行搜索1到30次
+searchInterval = input,15,type=number,tag=搜索间隔(秒),desc=每次搜索之间等待1到120秒
+showNotify = switch,true,type=boolean,tag=运行完成通知,desc=是否显示执行结果通知
+taskEnabled = switch,true,type=boolean,tag=启用定时任务,desc=关闭后不自动运行
 
 [Script]
-# 修改 cron 的 0 9 即每天 09:00；例如 30 20 即每天 20:30。
-# argument 中 count=搜索次数(1-30)，interval=每次搜索间隔秒数(1-120)。
-# 如果改远程订阅文件，请在 GitHub 更新；仅在 Loon 中改本地副本则不会影响仓库。
-cron "0 9 * * *" script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/bing_hot_topics.js,argument=count=5&interval=15,tag=Bing热点搜索,timeout=600
+cron ${runTime} then script("https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/bing_hot_topics.js", {${searchCount}, ${searchInterval}, ${showNotify}}) with enable=${taskEnabled}, timeout=3900, tag="Bing热点搜索"
