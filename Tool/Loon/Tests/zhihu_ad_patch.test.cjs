@@ -94,8 +94,8 @@ test('next-render and video playlist behaviour is unchanged', () => {
 
 test('plugin routes the feed into the script and rejects the splash/float-corner endpoints', () => {
  const scripts = plugin.split('\n').filter(l => l.startsWith('http-response'));
- assert.equal(scripts.length, 3);
- for (const l of scripts) assert.ok(l.includes('zhihu_ad_patch.js?v=1.1.0'), l);
+ assert.equal(scripts.length, 4);
+ for (const l of scripts) assert.ok(l.includes('zhihu_ad_patch.js?v=1.2.0'), l);
  const feedRe = new RegExp(scripts.find(l => l.includes('topstory')).split(' ')[1]);
  assert.ok(feedRe.test(FEED) && feedRe.test('https://api.zhihu.com/topstory/recommend'));
  for (const u of ['https://api.zhihu.com/topstory/recommend_v2', 'https://api.zhihu.com/topstory/hot-lists', 'https://api.zhihu.com.evil.com/topstory/recommend'])
@@ -110,4 +110,26 @@ test('plugin routes the feed into the script and rejects the splash/float-corner
  for (const u of ['https://api.zhihu.com/commercial_api/launch_v3', 'https://api.zhihu.com/commercial_api/real_time_launch_v2x',
   'https://api.zhihu.com/ad-style-service/request', 'https://api.zhihu.com/topstory/recommend', 'https://api.zhihu.com/next-render?id=1'])
   assert.equal(action(u), undefined, u);
+});
+
+test('feed: feed_advert third-party ad cards are removed from both lists', () => {
+ const f = feed();
+ f.data.splice(1, 0, {type:'feed_advert', ad:{brand:{name:'x'}}});
+ f.dataV1.splice(1, 0, {type:'feed_advert', ad:{}});
+ const out = JSON.parse(run(FEED, ok(f)).body);
+ assert.deepEqual(out.data.map(x => x.type + x.extra.content_id), ['ComponentCard1', 'ComponentCard3']);
+ assert.equal(out.dataV1.length, 2);
+});
+
+test('related waterfall: ZPlus cards removed, normal cards and paging kept', () => {
+ const URL = 'https://api.zhihu.com/related_recommend/feed/waterfall?id=1&type=pin&scenes=recommend';
+ const normal = id => ({id, type:'single_card', feedDeliveryType:'Normal', content:{deliver_type:'Normal'}});
+ const body = {paging:{next:'n'}, data:[normal('a'),
+  {id:'b', type:'single_card', feedDeliveryType:'ZPlus', is_zplus:true, extra:{}, content:{deliver_type:'ZPlus', is_zplus:true}},
+  {id:'c', type:'single_card', content:{deliver_type:'ZPlus'}}, normal('d')]};
+ assert.deepEqual(JSON.parse(run(URL, ok(body)).body), {paging:{next:'n'}, data:[normal('a'), normal('d')]});
+ assert.deepEqual(run(URL, ok({paging:{}, data:[normal('a')]})), {});
+ assert.deepEqual(run(URL, {status:200, headers:{}, body:'not json'}), {});
+ const re = new RegExp(plugin.split('\n').find(l => l.startsWith('http-response') && l.includes('waterfall')).split(' ')[1]);
+ assert.ok(re.test(URL) && !re.test('https://api.zhihu.com/related_recommend/feed/waterfallx'));
 });

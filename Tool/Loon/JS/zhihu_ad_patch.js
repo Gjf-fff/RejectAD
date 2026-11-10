@@ -1,6 +1,6 @@
 /*
  * 知乎广告补丁 / Loon HTTP Response Script
- * Version: 1.1.0 (2026-11-10)
+ * Version: 1.2.0 (2026-11-10)
  *
  * /next-render：依据知乎 iOS 11.10.0 HAR，删除 data[].type === "ad" 的回答间独立广告项。
  * /api/v4/videos：仅在播放列表明确含 ad_bidding(_ob) 素材时清空两套播放源。
@@ -8,7 +8,10 @@
  *   data[] 卡片：extra.promotion 非空，或 extra.business_ext_map.deliver_type === "ZPlus"。
  *   dataV1[] 卡片：unify_content.biz_ext.promotion 非空、rec.deliver_type === "ZPlus"、
  *   rec.source_type === "TS_SOURCE_EXTRA_PROMOTION"，或带 commercial_content_plugin_ad_tag 标签。
+ *   HAR 279 补充：type === "feed_advert" 的第三方 DSP 广告卡片（两个列表都有）。
  *   两个列表中内容 ID 相同的卡片一起删除；付费内容、普通视频及其他字段保留。
+ * /related_recommend/feed/waterfall：依据 HAR 279，删除想法/回答详情页下方推荐流中
+ *   is_zplus === true 或 feedDeliveryType / content.deliver_type === "ZPlus" 的推广卡片。
  * 不按品牌、关键词、图片域名或空的 ad_info 判断正常内容是否为广告。
  * 本脚本无需联网、Cookie、持久化存储或定时任务。
  *
@@ -21,7 +24,7 @@
 
 (function () {
   "use strict";
-  var TAG = "[知乎广告补丁 1.1.0]";
+  var TAG = "[知乎广告补丁 1.2.0]";
   var result = {};
 
   function isObject(value) {
@@ -56,6 +59,7 @@
   }
 
   function cardInfo(item) {
+    if (isObject(item) && item.type === "feed_advert") return { ad: true, ids: [] };
     var extra = isObject(item) && isObject(item.extra) ? item.extra : null;
     if (!extra) return { ad: false, ids: [] };
     var biz = asObject(extra.business_ext_map) || {};
@@ -67,6 +71,7 @@
   }
 
   function sduiInfo(item) {
+    if (isObject(item) && item.type === "feed_advert") return { ad: true, ids: [] };
     var content = isObject(item) && isObject(item.unify_content) ? item.unify_content : null;
     if (!content) return { ad: false, ids: [] };
     var biz = asObject(content.biz_ext) || {};
@@ -111,6 +116,13 @@
     return { removed: removed, kept: kept };
   }
 
+  function isZplusWaterfallCard(item) {
+    if (!isObject(item)) return false;
+    var content = isObject(item.content) ? item.content : {};
+    return item.is_zplus === true || item.feedDeliveryType === "ZPlus" ||
+      content.is_zplus === true || content.deliver_type === "ZPlus" || content.feedDeliveryType === "ZPlus";
+  }
+
   try {
     var url = typeof $request !== "undefined" ? $request.url || "" : "";
     var hasResponse = typeof $response !== "undefined" && $response;
@@ -150,6 +162,21 @@
             console.log(TAG + " /topstory/recommend 删除 " + counts.removed + " 张推广卡片，保留 " + counts.kept + " 张");
           } else {
             console.log(TAG + " /topstory/recommend 命中，本次无推广卡片");
+          }
+        }
+      }
+    } else if (/^https?:\/\/api\.zhihu\.com\/related_recommend\/feed\/waterfall\/?(?:\?|$)/i.test(url)) {
+      if (okBody) {
+        var related = JSON.parse(body);
+        if (isObject(related) && Array.isArray(related.data)) {
+          var relatedKept = related.data.filter(function (item) { return !isZplusWaterfallCard(item); });
+          var relatedRemoved = related.data.length - relatedKept.length;
+          if (relatedRemoved > 0) {
+            related.data = relatedKept;
+            result = { body: JSON.stringify(related) };
+            console.log(TAG + " /related_recommend 删除 " + relatedRemoved + " 张推广卡片，保留 " + relatedKept.length + " 张");
+          } else {
+            console.log(TAG + " /related_recommend 命中，本次无推广卡片");
           }
         }
       }

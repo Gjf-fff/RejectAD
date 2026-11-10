@@ -12,6 +12,17 @@
 
 更新后彻底退出知乎并重新打开，再刷新原回答。已缓存的广告不会因为规则更新而立即从页面消失。
 
+## HAR 279：插件未生效时段 + 两种新广告位（2026-11-10 / 1.2.0）
+
+本次抓包共 1319 条请求（15:06–15:09）。**15:08:14 之后，插件的复写和脚本都没有生效**：`launch_v2` / `real_time_launch_v2` 开屏、`bottom-v2`、`ad_bidding_ob` 广告视频都从服务器正常返回，推荐流、回答间广告和广告视频播放源也都是原样。而 15:08 之前 `bottom-v2`、`launch_v2` 仍由本机返回空对象。所以这段时间看到的广告，主要原因是插件没有运行，而不是规则漏掉。请检查：插件已更新为「知乎广告补丁」且启用；Loon 的复写、脚本、MitM 开关都已打开；日志中有 `[知乎广告补丁 1.2.0]`。
+
+同时新发现两种广告位，已加入脚本：
+
+- 首页推荐流中 `type = "feed_advert"` 的第三方 DSP 广告卡片（本次为穿山甲投放），`data` 和 `dataV1` 中各有一份。
+- 想法/回答详情页下方推荐流 `related_recommend/feed/waterfall` 中的知+推广卡片（`is_zplus = true`、`feedDeliveryType = ZPlus`）。新增这个接口的脚本入口；MitM 主机不变。
+
+用 1.2.0 离线回放本次抓包（假设插件正常运行）：4 份首页推荐流共删除 12 项（知+卡片及 `feed_advert`，含两份列表），2 份详情页推荐流删除 3 张知+卡片，4 份 `/next-render` 各删除 1 张回答间广告，2 份视频响应清空广告播放源；复写规则匹配 5 次开屏、7 次 `bottom-v2`、8 次浮动角标和 4 次 `ad_bidding_ob` 视频请求。普通卡片、付费内容、分页保留。评论区的商业插件（`plugin_info`）暂未处理。
+
 ## HAR 278：首页推荐流推广卡片与开屏广告（2026-11-10 / 1.1.0）
 
 本次抓包为知乎 iOS 11.14.0，共 273 条请求，确认两处仍能显示的广告：
@@ -135,7 +146,7 @@ Loon 同一响应最多执行一个响应脚本；命中响应体 Rewrite 时，
 ## 文件
 
 - `Tool/Loon/Plugin/Zhihu.plugin`：合并插件。
-- `Tool/Loon/JS/zhihu_ad_patch.js`：首页推荐流推广卡片、回答间卡片及广告视频播放源过滤脚本。
+- `Tool/Loon/JS/zhihu_ad_patch.js`：首页及详情页推荐流推广卡片、回答间卡片及广告视频播放源过滤脚本。
 - `Tool/Loon/Tests/zhihu_ad_patch.test.cjs`：脚本与插件规则的离线测试（`node --test Tool/Loon/Tests/*.test.cjs`）。
 - 知乎图标仍使用 [fmz200/wool_scripts 的图标](https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/zhihu.png)。
 
