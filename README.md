@@ -5,7 +5,7 @@ remove some ads
 
 - [DNS分流插件](Tool/Loon/Plugin/DNS分流.plugin)：按照各家的Doh进行加密解析（Cloudflare、Google、阿里、腾讯，使用 IP 形式 DoH）
 
-- [知乎回答页广告补丁：安装与说明](Tool/Loon/README.md)
+- [知乎广告补丁（首页推荐流、开屏、回答页）：安装与说明](Tool/Loon/README.md)
 - [知乎插件订阅地址](https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/Plugin/Zhihu.plugin)
 - [JM 网页广告补丁：安装与说明](Tool/Loon/README_JM.md)
 - [JM 插件订阅地址](https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/Plugin/JM.plugin)

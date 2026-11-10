@@ -1,0 +1,31 @@
+{
+  "capture_entries": 273,
+  "app_version": "iOS 11.14.0",
+  "feed_responses_routed": [22, 63, 162],
+  "feed_responses_changed": [22],
+  "feed_promotion_cards_removed": {
+    "data": [1],
+    "dataV1": [1],
+    "deliver_type": "ZPlus",
+    "source_type": "TS_SOURCE_EXTRA_PROMOTION"
+  },
+  "feed_cards_preserved": {
+    "normal_including_1_video": 4,
+    "paid": 1,
+    "other_top_level_fields_identical": true
+  },
+  "splash_requests_rejected": {
+    "real_time_launch_v2": [270],
+    "launch_v2_already_empty_locally": [258]
+  },
+  "float_corner_requests_rejected_already_empty_locally": [114, 207],
+  "next_render_responses_routed": 8,
+  "next_render_output_identical_to_1_0_2": true,
+  "other_requests_matching_new_rules": 0,
+  "idempotence": "passed",
+  "invalid_json_fail_open": true,
+  "unit_tests": "Tool/Loon/Tests/zhihu_ad_patch.test.cjs passed",
+  "older_har_replay": "not rerun (HAR 230/233/243 not available in this session); next-render and video branches unchanged",
+  "device_test": false,
+  "checks": "passed"
+}

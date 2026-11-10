@@ -1,4 +1,4 @@
-# 知乎回答页广告补丁（Loon）
+# 知乎广告补丁（Loon）
 
 原订阅地址保持不变；本次更新合并进已有插件，不需要另装一份插件。
 
@@ -11,6 +11,25 @@
 `lens.zhihu.com`、`*.vzuu.com`、`sugar.zhihu.com`、`api.zhihu.com`、`zhstatic.zhihu.com`、`qh-material.taobao.com`、`adx-track.domob.cn`、`wcp.taobao.com`、`lftxali.fancyapi.com`、`rtb.julang.taobao.com`。
 
 更新后彻底退出知乎并重新打开，再刷新原回答。已缓存的广告不会因为规则更新而立即从页面消失。
+
+## HAR 278：首页推荐流推广卡片与开屏广告（2026-11-10 / 1.1.0）
+
+本次抓包为知乎 iOS 11.14.0，共 273 条请求，确认两处仍能显示的广告：
+
+- **首页推荐流的知+推广卡片**：`api.zhihu.com/topstory/recommend` 返回的 6 张卡片中有 1 张是推广内容。它在 `data` 和 `dataV1` 两份列表里各出现一次，标记分别是 `extra.promotion`（含 `adsource=zhi_plus`）/ `deliver_type = ZPlus`，以及 `rec.source_type = TS_SOURCE_EXTRA_PROMOTION` / `commercial_content_plugin_ad_tag`（广告标签）。随后的 `sugar.zhihu.com/ad-track/zplus_log` 曝光请求说明这张卡片已经展示。
+- **热启动开屏广告**：`api.zhihu.com/commercial_api/real_time_launch_v2?start_type=warm` 由服务器下发了一条 5 秒全屏视频开屏广告（第三方 DSP 投放）。冷启动的 `launch_v2` 在本次抓包中已被本机其他规则置空，但热启动接口没有被覆盖。
+
+本次合并三项处理：
+
+- 脚本新增 `/topstory/recommend` 分支：删除带上述推广标记的卡片，并按内容 ID 同时删除另一份列表中的同一张卡片。付费内容（`deliver_type = Paid`）、普通视频卡片、分页和其他字段保留。不按品牌、关键词或图片判断。
+- `commercial_api/real_time_launch_v2` 与 `commercial_api/launch_v2` 返回空对象（reject-dict）。
+- `commercial_api/banners_v3/app_float_corner`（回答页浮动角标商业位）返回空对象。它在本次抓包中同样已被本机其他规则置空，并入本插件后单独使用也能覆盖。
+
+脚本版本及下载参数更新至 `1.1.0`，插件名称改为「知乎广告补丁」，订阅地址不变。MitM 主机无需新增（`api.zhihu.com` 已在列表中）。
+
+离线回放结果：1 份推荐流响应删除 2 项（同一推广卡片的两份数据），保留 10 项；另 2 份推荐流响应和 8 份 `/next-render` 响应保持原样，`/next-render` 的输出与 1.0.2 完全一致（本次无回答间广告）。新增复写只匹配 2 次开屏请求和 2 次浮动角标请求，其余请求均未匹配。重复执行、异常 JSON、失败状态和 URL 边界检查通过；单元测试见 `Tool/Loon/Tests/zhihu_ad_patch.test.cjs`，结果见 [Zhihu_verification_278.json](Zhihu_verification_278.json)。旧 HAR 230/233/243 未在本次重放。
+
+更新后彻底退出知乎再打开。开屏广告素材有预取缓存（本次下发的这条投放期到 2026-11-12 00:00），已缓存的素材在此之前可能还会出现一次。新日志包含 `[知乎广告补丁 1.1.0] /topstory/recommend 删除 … 张推广卡片`。若其他插件也对 `/topstory/recommend` 运行响应脚本，Loon 只会执行其中一个，需要关闭重复的那条。本次抓包中快手联盟 SDK 日志（`open.kuaishouzt.com`）仍在上报，但它不显示广告，未纳入。原始 HAR、回答正文、请求参数和个人标识不上传仓库。
 
 ## HAR 243：广告视频及备用播放源修复（2026-10-23 / 1.0.2）
 
@@ -116,7 +135,8 @@ Loon 同一响应最多执行一个响应脚本；命中响应体 Rewrite 时，
 ## 文件
 
 - `Tool/Loon/Plugin/Zhihu.plugin`：合并插件。
-- `Tool/Loon/JS/zhihu_ad_patch.js`：回答间卡片及广告视频播放源过滤脚本。
+- `Tool/Loon/JS/zhihu_ad_patch.js`：首页推荐流推广卡片、回答间卡片及广告视频播放源过滤脚本。
+- `Tool/Loon/Tests/zhihu_ad_patch.test.cjs`：脚本与插件规则的离线测试（`node --test Tool/Loon/Tests/*.test.cjs`）。
 - 知乎图标仍使用 [fmz200/wool_scripts 的图标](https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/zhihu.png)。
 
 脚本无需 Cookie、联网请求、持久化存储或定时任务。
