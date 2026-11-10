@@ -1,5 +1,5 @@
 #!name = 知乎广告补丁
-#!desc = 合并首页及详情页推荐流广告卡片过滤、开屏广告拦截、回答间独立广告卡片过滤、广告视频主/备用播放源清理及广告素材/曝光拦截。需要脚本、复写和 MitM；已缓存广告可能保留占位，详见说明。
+#!desc = 合并首页及详情页推荐流广告卡片过滤、开屏广告拦截、评论区商品卡移除、回答间独立广告卡片过滤、广告视频主/备用播放源清理及广告素材/曝光拦截。需要脚本、复写和 MitM；已缓存广告可能保留占位，详见说明。
 #!author = Gjf-fff
 #!icon = https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/zhihu.png
 #!homepage = https://github.com/Gjf-fff/RejectAD/blob/main/Tool/Loon/README.md
@@ -17,6 +17,8 @@ AND,((DOMAIN,api.zhihu.com),(PROTOCOL,QUIC)),REJECT
 ^https?:\/\/api\.zhihu\.com\/commercial_api\/answer\/\d+\/bottom-v2\/?(?:\?|$) reject-dict
 # HAR 278 确认：热启动开屏广告由 real_time_launch_v2 下发；launch_v2 为同类开屏接口（该 HAR 中已被本机其他规则置空）。返回空对象。
 ^https?:\/\/api\.zhihu\.com\/commercial_api\/(?:real_time_)?launch_v2\/?(?:\?|$) reject-dict
+# HAR 279：第三方广告 SDK（穿山甲/优量汇等）广告位预取配置；返回空对象。
+^https?:\/\/api\.zhihu\.com\/commercial_api\/sdk\/prefetch\/?(?:\?|$) reject-dict
 # 回答页浮动角标商业位（HAR 278 中已被本机其他规则置空），并入本插件以便单独使用；返回空对象。
 ^https?:\/\/api\.zhihu\.com\/commercial_api\/banners_v3\/app_float_corner\/?(?:\?|$) reject-dict
 # 本次 HAR 确认的知乎品牌广告资源及广告图片；不拦截正常 zhimg 图片。
@@ -30,11 +32,13 @@ AND,((DOMAIN,api.zhihu.com),(PROTOCOL,QUIC)),REJECT
 
 [Script]
 # HAR 278/279：首页推荐流中的知+推广卡片及 feed_advert 第三方广告（data 与 dataV1 两份列表）。
-http-response ^https?:\/\/api\.zhihu\.com\/topstory\/recommend\/?(?:\?|$) script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/zhihu_ad_patch.js?v=1.2.0,requires-body=true,timeout=10,tag=知乎首页推荐流广告补丁,enable=true
+http-response ^https?:\/\/api\.zhihu\.com\/topstory\/recommend\/?(?:\?|$) script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/zhihu_ad_patch.js?v=1.3.0,requires-body=true,timeout=10,tag=知乎首页推荐流广告补丁,enable=true
 # HAR 279：想法/回答详情页下方推荐流中的知+推广卡片。
-http-response ^https?:\/\/api\.zhihu\.com\/related_recommend\/feed\/waterfall\/?(?:\?|$) script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/zhihu_ad_patch.js?v=1.2.0,requires-body=true,timeout=10,tag=知乎详情页推荐流广告补丁,enable=true
-http-response ^https?:\/\/api\.zhihu\.com\/next-render\/?(?:\?|$) script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/zhihu_ad_patch.js?v=1.2.0,requires-body=true,timeout=10,tag=知乎回答间广告补丁,enable=true
-http-response ^https?:\/\/lens\.zhihu\.com\/api\/v4\/videos\/\d+\/?(?:\?|$) script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/zhihu_ad_patch.js?v=1.2.0,requires-body=true,timeout=10,tag=知乎广告视频播放源补丁,enable=true
+http-response ^https?:\/\/api\.zhihu\.com\/related_recommend\/feed\/waterfall\/?(?:\?|$) script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/zhihu_ad_patch.js?v=1.3.0,requires-body=true,timeout=10,tag=知乎详情页推荐流广告补丁,enable=true
+# HAR 279：评论区绑定的商品卡插件。
+http-response ^https?:\/\/api\.zhihu\.com\/comment_v5\/[a-z_]+\/\d+\/root_comment\/?(?:\?|$) script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/zhihu_ad_patch.js?v=1.3.0,requires-body=true,timeout=10,tag=知乎评论区商品卡补丁,enable=true
+http-response ^https?:\/\/api\.zhihu\.com\/next-render\/?(?:\?|$) script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/zhihu_ad_patch.js?v=1.3.0,requires-body=true,timeout=10,tag=知乎回答间广告补丁,enable=true
+http-response ^https?:\/\/lens\.zhihu\.com\/api\/v4\/videos\/\d+\/?(?:\?|$) script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/zhihu_ad_patch.js?v=1.3.0,requires-body=true,timeout=10,tag=知乎广告视频播放源补丁,enable=true
 
 [Mitm]
 # 常驻解密：覆盖现有脚本/复写主机，并补充 HAR 230 中的 sugar 广告相关请求。

@@ -1,6 +1,6 @@
 /*
  * 知乎广告补丁 / Loon HTTP Response Script
- * Version: 1.2.0 (2026-11-10)
+ * Version: 1.3.0 (2026-11-10)
  *
  * /next-render：依据知乎 iOS 11.10.0 HAR，删除 data[].type === "ad" 的回答间独立广告项。
  * /api/v4/videos：仅在播放列表明确含 ad_bidding(_ob) 素材时清空两套播放源。
@@ -12,6 +12,8 @@
  *   两个列表中内容 ID 相同的卡片一起删除；付费内容、普通视频及其他字段保留。
  * /related_recommend/feed/waterfall：依据 HAR 279，删除想法/回答详情页下方推荐流中
  *   is_zplus === true 或 feedDeliveryType / content.deliver_type === "ZPlus" 的推广卡片。
+ * /comment_v5/.../root_comment：依据 HAR 279，删除评论区商品卡插件（plugin_info 含 plugin_asset）
+ *   并清空 ad_plugin_infos；评论内容本身保留。
  * 不按品牌、关键词、图片域名或空的 ad_info 判断正常内容是否为广告。
  * 本脚本无需联网、Cookie、持久化存储或定时任务。
  *
@@ -24,7 +26,7 @@
 
 (function () {
   "use strict";
-  var TAG = "[知乎广告补丁 1.2.0]";
+  var TAG = "[知乎广告补丁 1.3.0]";
   var result = {};
 
   function isObject(value) {
@@ -162,6 +164,27 @@
             console.log(TAG + " /topstory/recommend 删除 " + counts.removed + " 张推广卡片，保留 " + counts.kept + " 张");
           } else {
             console.log(TAG + " /topstory/recommend 命中，本次无推广卡片");
+          }
+        }
+      }
+    } else if (/^https?:\/\/api\.zhihu\.com\/comment_v5\/[a-z_]+\/\d+\/root_comment\/?(?:\?|$)/i.test(url)) {
+      if (okBody) {
+        var comments = JSON.parse(body);
+        if (isObject(comments)) {
+          var changed = [];
+          if (isObject(comments.plugin_info) && isObject(comments.plugin_info.plugin_asset)) {
+            delete comments.plugin_info;
+            changed.push("商品卡插件");
+          }
+          if (Array.isArray(comments.ad_plugin_infos) && comments.ad_plugin_infos.length > 0) {
+            comments.ad_plugin_infos = [];
+            changed.push("广告插件列表");
+          }
+          if (changed.length > 0) {
+            result = { body: JSON.stringify(comments) };
+            console.log(TAG + " /root_comment 删除评论区" + changed.join("、"));
+          } else {
+            console.log(TAG + " /root_comment 命中，本次无评论区商业插件");
           }
         }
       }

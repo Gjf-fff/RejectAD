@@ -94,8 +94,8 @@ test('next-render and video playlist behaviour is unchanged', () => {
 
 test('plugin routes the feed into the script and rejects the splash/float-corner endpoints', () => {
  const scripts = plugin.split('\n').filter(l => l.startsWith('http-response'));
- assert.equal(scripts.length, 4);
- for (const l of scripts) assert.ok(l.includes('zhihu_ad_patch.js?v=1.2.0'), l);
+ assert.equal(scripts.length, 5);
+ for (const l of scripts) assert.ok(l.includes('zhihu_ad_patch.js?v=1.3.0'), l);
  const feedRe = new RegExp(scripts.find(l => l.includes('topstory')).split(' ')[1]);
  assert.ok(feedRe.test(FEED) && feedRe.test('https://api.zhihu.com/topstory/recommend'));
  for (const u of ['https://api.zhihu.com/topstory/recommend_v2', 'https://api.zhihu.com/topstory/hot-lists', 'https://api.zhihu.com.evil.com/topstory/recommend'])
@@ -108,7 +108,7 @@ test('plugin routes the feed into the script and rejects the splash/float-corner
  assert.equal(action('https://api.zhihu.com/commercial_api/launch_v2?app=zhihu'), 'reject-dict');
  assert.equal(action('https://api.zhihu.com/commercial_api/banners_v3/app_float_corner?token=1&type=answer'), 'reject-dict');
  for (const u of ['https://api.zhihu.com/commercial_api/launch_v3', 'https://api.zhihu.com/commercial_api/real_time_launch_v2x',
-  'https://api.zhihu.com/ad-style-service/request', 'https://api.zhihu.com/topstory/recommend', 'https://api.zhihu.com/next-render?id=1'])
+  'https://api.zhihu.com/ad-style-service/request', 'https://api.zhihu.com/commercial_api/sdk/prefetchx', 'https://api.zhihu.com/topstory/recommend', 'https://api.zhihu.com/next-render?id=1'])
   assert.equal(action(u), undefined, u);
 });
 
@@ -132,4 +132,18 @@ test('related waterfall: ZPlus cards removed, normal cards and paging kept', () 
  assert.deepEqual(run(URL, {status:200, headers:{}, body:'not json'}), {});
  const re = new RegExp(plugin.split('\n').find(l => l.startsWith('http-response') && l.includes('waterfall')).split(' ')[1]);
  assert.ok(re.test(URL) && !re.test('https://api.zhihu.com/related_recommend/feed/waterfallx'));
+});
+
+test('comments: commercial plugin card removed, comments kept; sdk prefetch rejected', () => {
+ const URL = 'https://api.zhihu.com/comment_v5/pins/2097677635732222565/root_comment?order_by=score&limit=20';
+ const c = [{type:'comment', id:1, content:'a'}];
+ const body = {data:c, paging:{}, ad_plugin_infos:[{x:1}], plugin_info:{comment_ids:['1'], plugin_asset:{cardType:'normal', deeplinkUrl:'x'}}};
+ assert.deepEqual(JSON.parse(run(URL, ok(body)).body), {data:c, paging:{}, ad_plugin_infos:[]});
+ assert.deepEqual(run(URL, ok({data:c, paging:{}, ad_plugin_infos:[]})), {});
+ assert.deepEqual(run('https://api.zhihu.com/comment_v5/answers/1/root_comment', {status:200, headers:{}, body:'x'}), {});
+ const re = new RegExp(plugin.split('\n').find(l => l.startsWith('http-response') && l.includes('root_comment')).split(' ')[1]);
+ assert.ok(re.test(URL) && re.test('https://api.zhihu.com/comment_v5/answers/1/root_comment'));
+ assert.ok(!re.test('https://api.zhihu.com/comment_v5/comment/1/child_comment'));
+ const rw = plugin.split('\n').find(l => l.startsWith('^') && l.includes('prefetch'));
+ assert.ok(new RegExp(rw.split(/\s+/)[0]).test('https://api.zhihu.com/commercial_api/sdk/prefetch') && rw.endsWith('reject-dict'));
 });
