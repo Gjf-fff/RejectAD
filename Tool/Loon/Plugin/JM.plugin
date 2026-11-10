@@ -60,7 +60,8 @@ AND,((DOMAIN,api.zhihu.com),(PROTOCOL,QUIC)),REJECT
 ^https?:\/\/sugar\.zhihu\.com\/(?:ad-track\/(?:zplus_log|dream_third)|plutus_adreaper(?:\/(?:page_monitor_log|ad_adx_log))?)\/?(?:\?|$) reject-200
 
 [Script]
-http-response ^https?:\/\/(?:www\.)?(?:18comic\.vip|jmcomic-zzz\.one)\/ script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/jm_web_ad_patch.js?v=1.1.4,requires-body=true,timeout=10,tag=JM网页广告补丁,enable=true
+# JM 1.1.5：只让网页进入脚本；Cloudflare 验证、AJAX、模板/静态目录及 JS/CSS/图片/字体等静态文件不再整包缓冲。
+http-response ^https?:\/\/(?:www\.)?(?:18comic\.vip|jmcomic-zzz\.one)\/(?!(?:cdn-cgi|templates|static|ajax)(?:\/|\?|$))(?![^?#]*\.(?:js|mjs|css|map|json|png|jpe?g|gif|webp|avif|svg|ico|bmp|woff2?|ttf|otf|eot|mp4|webm|m3u8|ts|mp3|zip)(?:[?#]|$)) script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/jm_web_ad_patch.js?v=1.1.5,requires-body=true,timeout=10,tag=JM网页广告补丁,enable=true
 
 http-response ^https?:\/\/(?:www\.)?missav\.ai\/ script-path=https://raw.githubusercontent.com/Gjf-fff/RejectAD/main/Tool/Loon/JS/video_popup_patch.js,requires-body=true,timeout=10,tag=视频播放广告弹窗补丁,enable=true
 

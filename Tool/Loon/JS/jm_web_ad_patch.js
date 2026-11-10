@@ -1,5 +1,6 @@
 /* JM 网页广告补丁 / Loon HTTP Response Script
- * Version: 1.1.4 (2026-10-16)
+ * Version: 1.1.5 (2026-11-10)
+ * 1.1.5：改写正文后删除过期的 Content-Length / Content-Encoding / ETag / Content-MD5，修复网页偶发打不开。
  * 根据 HAR 197/206/208/218/227 中的广告容器及同源加载器编写。
  * 只处理 18comic.vip / jmcomic-zzz.one 的成功完整 HTML 响应；保留正常内容、导航、表单及验证页面。
  */
@@ -124,7 +125,12 @@
         body = /<\/head\s*>/i.test(body) ? body.replace(/<\/head\s*>/i, shield + "</head>") : shield + body;
       }
       if (body !== response.body) {
-        result = { body: body };
+        // 正文已变短：删除过期的长度、压缩与校验头，否则浏览器会等待不存在的字节而白屏/转圈。
+        var nextHeaders = {};
+        Object.keys(response.headers || {}).forEach(function (name) {
+          if (!/^(?:content-length|content-encoding|etag|content-md5)$/i.test(name)) nextHeaders[name] = response.headers[name];
+        });
+        result = { body: body, headers: nextHeaders };
         console.log("[JM广告补丁] 删除 " + outer.length + " 个广告容器及 " + scriptsRemoved + " 个广告脚本");
       } else {
         console.log("[JM广告补丁] HTML 命中，本次未发现已知广告容器");
