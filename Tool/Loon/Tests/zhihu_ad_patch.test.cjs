@@ -147,3 +147,16 @@ test('comments: commercial plugin card removed, comments kept; sdk prefetch reje
  const rw = plugin.split('\n').find(l => l.startsWith('^') && l.includes('prefetch'));
  assert.ok(new RegExp(rw.split(/\s+/)[0]).test('https://api.zhihu.com/commercial_api/sdk/prefetch') && rw.endsWith('reject-dict'));
 });
+
+test('plugin blocks Zhihu HTTPDNS lookups and QUIC for all zhihu.com hosts', () => {
+ assert.ok(plugin.includes('AND,((DOMAIN-SUFFIX,zhihu.com),(PROTOCOL,QUIC)),REJECT'));
+ const rw = plugin.split('\n').find(l => l.startsWith('^') && l.includes('resolv'));
+ const re = new RegExp(rw.split(/\s+/)[0]);
+ assert.equal(rw.split(/\s+/)[1], 'reject');
+ for (const u of ['http://182.61.194.7/v2/resolv?host=api.zhihu.com%2Cwww.zhihu.com%2Cpic1.zhimg.com&nettype=wifi',
+  'http://182.61.194.7/v2/resolv?host=zhihu-web-analytics.zhihu.com&nettype=wifi', 'http://180.76.76.200/v2/resolv?account_id=1&host=picx.zhimg.com'])
+  assert.ok(re.test(u), u);
+ for (const u of ['http://182.61.194.7/v2/resolv?host=www.baidu.com', 'http://httpdns.example.com/v2/resolv?host=api.zhihu.com',
+  'https://api.zhihu.com/v2/resolv?host=api.zhihu.com'])
+  assert.ok(!re.test(u), u);
+});

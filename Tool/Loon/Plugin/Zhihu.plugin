@@ -6,11 +6,15 @@
 #!tag = 去广告,知乎
 
 [Rule]
-# 仅限制知乎核心 API 的 QUIC，促使支持回退的连接改走 TCP；HAR 233 未证明 QUIC 是根因。
 # 协议/逻辑规则需要 Loon 3.1.7+；本地放行规则可能优先于插件规则。
-AND,((DOMAIN,api.zhihu.com),(PROTOCOL,QUIC)),REJECT
+# HAR 279/280：不抓包时部分广告仍出现。知乎会走 QUIC 或按 HTTPDNS 返回的 IP 直连，这些连接不经过 MitM。
+# 拒绝全部 zhihu.com 主机的 QUIC，促使其回退 TCP（原规则只覆盖 api.zhihu.com）。
+AND,((DOMAIN-SUFFIX,zhihu.com),(PROTOCOL,QUIC)),REJECT
 
 [Rewrite]
+# HAR 279：知乎冷启动时用明文 HTTP 向百度 HTTPDNS（如 182.61.194.7/v2/resolv）解析 api/sugar/zhimg 等主机并可按 IP 直连。
+# 拒绝这类只含知乎主机的解析请求，App 回退系统 DNS 按域名连接，MitM 和插件规则才能匹配。明文 HTTP，无需 MitM。
+^http:\/\/\d{1,3}(?:\.\d{1,3}){3}\/v2\/resolv\?(?:[^#]*&)?host=[^&#]*(?:zhihu\.com|zhimg\.com) reject
 # HAR 243 确认的广告视频目录；保留普通 vzuu 视频路径。
 ^https?:\/\/vdn\d+\.vzuu\.com\/(?:[^/?#]+\/)?ad_bidding(?:_ob)?\/ reject
 # 已知的回答底部商业广告接口；来源见 README，本次 HAR 未捕获此接口。
